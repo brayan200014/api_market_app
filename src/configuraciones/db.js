@@ -1,6 +1,6 @@
 const sequelize= require('sequelize');
 const db= new sequelize (
-    'basemovil',
+    'pruebamovil',
     'root',
     'Semeolvido14',
     {

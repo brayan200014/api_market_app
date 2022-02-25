@@ -27,6 +27,10 @@ const Venta= db.define(
         ISV: {
             type: sequelize.DOUBLE,
             allowNull: false
+        },
+        imagen: {
+            type: sequelize.STRING,
+            allowNull:true
         }
     },
     {
