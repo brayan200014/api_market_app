@@ -1,11 +1,13 @@
 const sequelize= require('sequelize');
 const db= new sequelize (
-    'BaseMovil',
+    'basemovil',
     'root',
-    'contrasena',
+    'Semeolvido14',
     {
         host: 'localhost',
         dialect: 'mysql',
         port: '3306'
     }
 );
+
+module.exports= db;
