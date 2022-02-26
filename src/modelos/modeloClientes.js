@@ -12,7 +12,7 @@ const Cliente = db.define("cliente",
     },
     Nombre:{
         type: sequelize.STRING(45),
-        allowNull: true,
+        allowNull: false,
     },
     correo:{
         type: sequelize.STRING(250),
@@ -24,7 +24,7 @@ const Cliente = db.define("cliente",
     },
     creacion:{
         type: sequelize.DATE,
-        allowNull: false,
+        allowNull: true,
     },
     estado:{
         type: sequelize.BOOLEAN,
