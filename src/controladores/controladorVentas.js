@@ -1,6 +1,11 @@
 const {validationResult}= require('express-validator');
 const modeloVentas= require('../modelos/modeloVentas');
 const msj= require('../componentes/mensaje');
+const modeloDetalleVenta= require('../modelos/modeloDetalleVenta');
+//const modeloProducto= require('')
+const controladorDetalleVenta= require('../controladores/controladorDetalleVenta');
+var Venta_IdVenta=0;
+
 //const modeloUsuarioCliente= require(''); 
 //const modeloSucursal= require('');
 
@@ -60,11 +65,13 @@ exports.guardar= async (req,res) => {
     {
         const {FechaVenta, Subtotal, ISV}= req.body;
 
-        if(!FechaVenta || !Subtotal || !ISV /*|| !IdUsuarioCliente || !Sucursales_IdSucursal*/) {
+        if(!FechaVenta || !Subtotal || !ISV) {
             msj("Hay datos vacios al enviar los datos", 200, [], res); 
         }
         else 
         {
+
+
            /* var buscarIdCliente; 
             var buscarIdSucursal;*/
            /* var buscarIdCliente= await modeloUsuarioCliente.findOne({
@@ -96,16 +103,23 @@ exports.guardar= async (req,res) => {
                    Sucursales_IdSucursal: buscarIdSucursal*/
                 
                }).then((data) => {
+                   Venta_IdVenta= data.IdVenta;
                    msj("Registro Almacenado", 200, [], res);
+                 
                }).catch((error) => {
                    msj("Ocurrio un error al almacenar los datos", 200,[], res);
                    console.log(error);
                })
          //  }
-           
+
+    
+
+
         }
     }
 }
+
+
 
 exports.modificar= async (req,res)=>{
     const validacion= validationResult(req); 

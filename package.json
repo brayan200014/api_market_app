@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/brayan200014/supermercadoMovil#readme",
   "dependencies": {
+    "@sequelize/core": "^7.0.0-alpha.10",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
