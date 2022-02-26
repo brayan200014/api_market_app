@@ -8,6 +8,7 @@ app.use(morgan('dev'));
 app.use(express.urlencoded({extended:false}));
 app.use(express.json()); 
 app.use('/api/cliente',require('./rutas/rutaClientes'));
+app.use('/api/productos', require('./rutas/rutasProductos')); 
 
 app.listen(6001, ()=> {
     console.log("el servidor escucha el puerto 6001");
