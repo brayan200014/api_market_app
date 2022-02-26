@@ -18,5 +18,7 @@ const upload= multer({
 
 const router= Router();
 router.get('/',upload.single('img'), controladorArchivos.RecibirImagenProducto);
+router.get('/consultar',controladorArchivos.consultarImagenProducto);
+
 
 module.exports= router;

@@ -48,3 +48,34 @@ exports.RecibirImagenProducto= async (req,res) => {
         });
     }
 }
+
+
+exports.consultarImagenProducto= async (req,res) =>{
+    const {id}= req.query;
+
+
+    var buscarImagen= await modeloVentas.findOne({
+        where: {
+            IdVenta: id
+        }
+    });
+
+    if(!buscarImagen) {
+        msj("El producto no existe", 200, [], res);
+    }
+    else 
+    {
+        const imagen= fs.existsSync(path.join(__dirname, '../public/img/'+ buscarImagen.imagen));
+
+        if(!imagen) {
+            msj("Imagen no existe", 200, [], res);
+        }
+        else 
+        {
+                 res.sendFile(path.join(__dirname, '../public/img/'+ buscarImagen.imagen))
+        }
+    }
+}
+
+
+

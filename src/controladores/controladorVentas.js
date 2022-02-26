@@ -8,12 +8,45 @@ exports.listar= async (req,res) => {
     const listarVentas= await modeloVentas.findAll();
 
     if(listarVentas.length==0) {
-        res.send("No hay usuarios registrados");
+        msj("No hay usuarios registrados", 200, [], res); 
     }
     else 
     {
-        res.json(listarVentas);
+        msj("Datos Ventas", 200, listarVentas, res); 
     }
+}
+
+exports.listarVenta= async (req,res) => {
+    const validacion= validationResult(req); 
+
+    if(!validacion.isEmpty()) {
+        res.json(validacion.array()); 
+    }
+    else 
+    {
+        const {id}= req.query;
+
+        if(!id) {
+            msj("El id no contiene ningun dato", 200, [], res); 
+        }
+        else 
+        {
+            const buscarVenta= await modeloVentas.findOne({
+                where: {
+                    IdVenta: id
+                }
+            });
+
+            if(!buscarVenta) {
+                msj("El numero de factura proporcionado no existe en la base de datos", 200, [], res);
+            }
+            else 
+            {
+                msj("Datos", 200, buscarVenta, res);
+            }
+        }
+    }
+
 }
 
 

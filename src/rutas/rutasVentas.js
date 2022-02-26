@@ -4,6 +4,7 @@ const {body,query }= require('express-validator');
 const controladorVentas= require('../controladores/controladorVentas');
 
 router.get('/listar', controladorVentas.listar); 
+router.get('/listarVenta', controladorVentas.listarVenta); 
 
 router.post('/guardar', body('FechaVenta').isDate().withMessage("El formato de fecha es invalido"),
 body('Subtotal').isFloat().withMessage("El valor debe ser un numero"),
