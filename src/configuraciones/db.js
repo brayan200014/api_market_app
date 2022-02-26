@@ -1,8 +1,8 @@
 const sequelize= require('sequelize');
 const db= new sequelize (
-    'BaseMovil',
+    'basemovil',
     'root',
-    'contrasena',
+    'password',
     {
         host: 'localhost',
         dialect: 'mysql',
