@@ -9,6 +9,8 @@ app.set('json spaces', 2);
 app.use('/api/', require('./rutas/Index'));
 app.use('/api/empleados/', require('./rutas/rutasEmpleados'));
 app.use('/api/sucursales/', require('./rutas/rutasSucursales'));
+app.use('/api/ciudades/', require('./rutas/rutasCiudades'));
+
 app.listen(6001, ()=> {
     console.log("el servidor escucha el puerto 6001");
 });

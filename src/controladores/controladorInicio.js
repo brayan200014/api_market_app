@@ -6,3 +6,11 @@ exports.empleados = (req, res) =>{
     console.log("Estoy en");
     res.send("Estoy en la pagina Empleados");
 };
+exports.sucursales = (req, res) =>{
+    console.log("Estoy en");
+    res.send("Estoy en la pagina Sucursales");
+};
+exports.ciudades = (req, res) =>{
+    console.log("Estoy en");
+    res.send("Estoy en la pagina Ciudades");
+};
