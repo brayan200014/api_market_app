@@ -10,7 +10,7 @@ app.use('/api/', require('./rutas/Index'));
 app.use('/api/empleados/', require('./rutas/rutasEmpleados'));
 app.use('/api/sucursales/', require('./rutas/rutasSucursales'));
 app.use('/api/ciudades/', require('./rutas/rutasCiudades'));
-
+app.use('/api/autenticacion/', require('./rutas/rutasAutenticacion'));
 app.listen(6001, ()=> {
     console.log("el servidor escucha el puerto 6001");
 });

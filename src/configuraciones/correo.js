@@ -1,9 +1,9 @@
 const nodemailer = require('nodemailer');
 exports.recuperarContrasena = async(data) => {
-    const configuracionesCorreo = {
+    const configuracionCorreo = {
         from: process.env.correo_app,
         to: data.correo,
-        subject: "Recuperar Contrasena",
+        subject: "Recuperar Contraseña",
         text:"Pin: " + data.pin,
     };
     const transporte = nodemailer.createTransport({
