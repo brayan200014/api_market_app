@@ -31,7 +31,7 @@ exports.guardarEmpleados = async (req, res) => {
         res.json(validacion.array());
     }
     else{
-        const {Nombre, Apellido, Telefono, Email, Sucursales_IdSucursal, Puestos_IdPuesto} = req.body;
+        const {Nombre, Apellido, Telefono, Direccion, Email, FechaContratacion, Estado, Sucursales_IdSucursal, Puestos_IdPuesto} = req.body;
     if(!Nombre || !Apellido ||!Telefono ||!Email ||!Sucursales_IdSucursal ||!Puestos_IdPuesto){
         res.send("Debe enviar los datos completos");
     }
@@ -54,7 +54,10 @@ exports.guardarEmpleados = async (req, res) => {
                         Nombre,
                         Apellido,
                         Telefono,
+                        Direccion,
                         Email, 
+                        FechaContratacion, 
+                        Estado,
                         Sucursales_IdSucursal,
                         Puestos_IdPuesto, 
                     })
