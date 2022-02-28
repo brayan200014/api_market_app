@@ -2,10 +2,10 @@ const sequelize= require('sequelize');
 const db= new sequelize (
     'BaseMovil',
     'root',
-    'contrasena',
+    'Moises1998',
     {
         host: 'localhost',
         dialect: 'mysql',
-        port: '3306'
+        port: '3307'
     }
 );
