@@ -11,7 +11,7 @@ exports.inicio = (req, res) =>{
 
 //listar Categorias
 exports.listar= async (req,res) => {
-    const listarCategorias= await modeloCategorias.findAll();
+    const listarCategorias= await ModeloCategoria.findAll();
 
     if(listarCategorias.length==0) {
         msj("No hay categorias!!", 200, [], res); 
@@ -36,7 +36,7 @@ exports.guardarCategorias= async (req, res) => {
             res.send("Debe enviar los datos completos");
         }
         else{
-            await modeloCategorias.create({
+            await ModeloCategoria.create({
                 NombreCategoria
             })
             .then((data) => {
@@ -59,7 +59,7 @@ exports.eliminarCategoria = async (req, res) => {
         res.send("Envie el nombre correcto!!");
     }
     else{
-            await modeloCategorias.destroy({
+            await ModeloCategoria.destroy({
                 where:{
 
                     NombreCategoria: NombreCategoria,
@@ -92,7 +92,7 @@ exports.modificarCategorias = async (req, res) => {
         res.send("Por favor envie los datos completos");
     }
     else{
-        var busquedaCategoria = await modeloCategorias.findOne({
+        var busquedaCategoria = await ModeloCategoria.findOne({
             where:{
 
                 IdCategoria: IdCategoria  
