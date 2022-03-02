@@ -14,7 +14,9 @@ app.use('/api/ciudades/', require('./rutas/rutasCiudades'));
 app.use('/api/autenticacion/', require('./rutas/rutasAutenticacion'));
 app.use('/', require('./rutas/rutasProveedores'));
 app.use('/api/ventas', require('./rutas/rutasVentas'));
-app.use('/api/archivos', require('./rutas/rutasArchivos'));
+app.use('/api/archivos', require('./rutas/rutasArchivos')); 
+app.use('/api/cliente',require('./rutas/rutaClientes'));
+app.use('/api/productos', require('./rutas/rutasProductos')); 
 app.listen(6001, ()=> {
     console.log("el servidor escucha el puerto 6001");
 });

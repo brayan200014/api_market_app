@@ -2,8 +2,7 @@ const sequelize = require('sequelize');
 const db = require('../configuraciones/db');
 const bcrypt = require('bcrypt');
 
-const Cliente = db.define(
-    "cliente",
+const Cliente = db.define("cliente",
 {
     id:{
         type: sequelize.INTEGER,
