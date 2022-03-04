@@ -7,9 +7,12 @@ const router = Router();
 router.get('/', controladorClientes.inicio);
 router.get('/listar', controladorClientes.listar);
 router.get('/buscar', controladorClientes.buscar);
+
 router.post('/guardar',controladorClientes.guardar);
+
 router.put('/modificarCorreo', controladorClientes.modificarCorreo);
 router.put('/modificarEstado', controladorClientes.modificarEstado);
+router.put('/modificar', controladorClientes.modificar);
 router.delete('/eliminar', controladorClientes.eliminar);
 
 module.exports=router;

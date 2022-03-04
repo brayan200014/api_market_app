@@ -43,27 +43,39 @@ exports.inicio = (req,res) => {
  };
 
  exports.guardar = async (req,res) => {
-        const{IdUsuarioCliente, NombreUsuario, Correo, Contrasena} = req.body;
-        if(!IdUsuarioCliente || !NombreUsuario || !Correo || !Contrasena){
-            res.send("Debe enviar los datos completos");
+    const validacion = validationResult(req);
+    if(!validacion.isEmpty())
+    {
+        res.json(validacion.array());
+    }
+    else
+    {
+        const {IdUsuarioCliente, NombreUsuario, Correo, Contrasena, Estado} = req.body;
+        if(!IdUsuarioCliente || !NombreUsuario || !Correo || !Contrasena || !Estado)
+        {
+        res.send("Debe enviar los datos completos");
         }
-        else{
+        else
+        {
             await modeloCliente.create({
                 IdUsuarioCliente,
                 NombreUsuario,
                 Correo,
-                Contrasena,
+                Contrasena, 
+                Estado,
             })
-            .then((data)=>{
+            .then((data) => 
+            {
                 console.log(data);
-                res.send("Registro Almacenado");
+                res.send("Registro Listo");     
             })
-            .catch((error)=>{
+            .catch((error) =>
+            {
                 console.log(error);
-                res.send("Error al guardar los datos")
-            })
-        }
-
+                res.send("Error al guardar");    
+            });
+        }    
+    }
  };
  
  exports.modificarCorreo = async(req, res) =>{
@@ -125,42 +137,61 @@ exports.inicio = (req,res) => {
     }
  };
 
- exports.eliminar = async (req,res) => {
-  
-    const {id} = req.query; 
-
-    if(!id)
-    {
-        res.send("Debe enviar el id de la persona");
-    }
-    else
-    {
-        var buscarCliente = await modeloCliente.findOne(
-            {
-                where: {
-                    IdUsuarioCliente: id,
-                }
+ exports.modificar = async(req, res) =>{
+    const{id}=req.query;
+    const{Estado, Correo}=req.body;
+    if(!id || !Estado || !Correo){
+        res.send("Envie los datos completos");
+    }else{
+        var buscarCliente = await modeloCliente.findOne({
+            where:{
+                IdUsuarioCliente:id
             }
-        );
+        });
+        if(!buscarCliente){
+            res.send("El Id no existe");
+        }else{
+            buscarCliente.Estado=Estado;
+            buscarCliente.Correo=Correo;
+            await buscarCliente.save()
+            .then((data) => {
+                console.log(data);
+                res.send("Registro modificado");
+                
+            })
+            .catch((error) => {
+                console.log(error);
+                res.send("Error al querer modificar los datos");
+            });
+        }
+    }
+ };
 
-        if(!buscarCliente)
-        {
-            res.send("El Usuario no existe");
-        }
-        else
-        {
-                    await modeloCliente.destroy({
-                        where:
-                        {
-                            id: id,
-                        }
-                    }).then((data) => {
+
+ exports.eliminar = async (req,res) => {
+    const {IdUsuarioCliente} = req.query;
+    if(!IdUsuarioCliente){
+        res.send("Envie el ID del cliente");
+    }
+    else{
+            await modeloCliente.destroy({
+                where:{
+
+                    IdUsuarioCliente: IdUsuarioCliente,
+                }
+            })
+            .then((data) => {
+                if (data==0) {
+                    res.send("El registro del Cliente no existe");
+                } else {
                     console.log(data);
-                    res.send("Registro eliminado correctamente");}).catch((error) => 
-                    {
-                    console.log(error);
-                    res.send("Error borrar datos");
-                });
-        }
+                    res.send("Cliente eliminado con exito");
+                }
+            })   
+            .catch((error) => {
+                console.log(error);
+                res.send("Error al eliminar los datos del cliente");
+
+            });
     }
  };
