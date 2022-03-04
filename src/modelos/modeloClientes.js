@@ -4,45 +4,45 @@ const bcrypt = require('bcrypt');
 
 const Cliente = db.define("cliente",
 {
-    id:{
+    IdUsuarioCliente:{
         type: sequelize.INTEGER,
         primaryKey: true ,
         autoIncrement: true,
         allowNull: false,
     },
-    Nombre:{
+    NombreUsuario:{
         type: sequelize.STRING(45),
         allowNull: false,
     },
-    correo:{
+    Correo:{
         type: sequelize.STRING(250),
         allowNull: false,
     },
-    contraseña:{
+    Contrasena:{
         type: sequelize.STRING(250),
         allowNull: false,
     },
-    creacion:{
+    FechaCreacion:{
         type: sequelize.DATE,
         allowNull: true,
     },
-    estado:{
-        type: sequelize.BOOLEAN,
+    Estado:{
+        type: sequelize.TINYINT(1),
         allowNull: true,
         defaultValue: true,
     },
 },
 {
-    tableName: "clientes",
+    tableName: "usuarioscliente",
     timestamps: false,
     hooks:{
         beforeCreate(cliente){
-            const hast = bcrypt.hashSync(cliente.contraseña, 10);
-            cliente.contraseña=hast;
+            const hast = bcrypt.hashSync(cliente.Contrasena, 10);
+            cliente.Contrasena=hast;
         },
         beforeUpdate(cliente){
-            const hast = bcrypt.hashSync(cliente.contraseña, 10);
-            cliente.contraseña=hast;
+            const hast = bcrypt.hashSync(cliente.Contrasena, 10);
+            cliente.Contrasena=hast;
         }
     }
 }

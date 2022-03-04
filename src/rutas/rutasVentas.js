@@ -9,21 +9,21 @@ router.get('/listarVenta', controladorVentas.listarVenta);
 
 router.post('/guardar', body('FechaVenta').isDate().withMessage("El formato de fecha es invalido"),
 body('Subtotal').isFloat().withMessage("El valor debe ser un numero"),
-body('ISV').isFloat().withMessage("El valor debe ser un numero")/*,
+body('ISV').isFloat().withMessage("El valor debe ser un numero"),
 body('IdUsuarioCliente').isInt().withMessage("El id del cliente debe ser un entero"),
-body('Sucursales_IdSucursal').isInt().withMessage("El id de la sucurdal debe ser un entero")*/,
+body('IdSucursal').isInt().withMessage("El id de la sucurdal debe ser un entero"),
 controladorVentas.guardar);
 
 router.post('/guardarDetalle',body('Cantidad').isInt().withMessage("El valor debe ser un numero"),
 body('Precio').isFloat().withMessage("El valor debe ser un numero"),
-body('IdProducto').isInt().withMessage("Debe ser un numero entero el IdVenta"),
+body('IdProducto').isInt().withMessage("Debe ser un numero entero el IdProducto"),
 controladorDetalleVenta.guardarDetalle);
 
-router.put('/modificar', body('FechaVenta').isDate().withMessage("El formato de fecha es invalido"),
+router.put('/modificar',query('id').isInt().withMessage("Envie un numero entero"), body('FechaVenta').isDate().withMessage("El formato de fecha es invalido"),
 body('Subtotal').isFloat().withMessage("El valor debe ser un numero"),
-body('ISV').isFloat().withMessage("El valor debe ser un numero")/*,
+body('ISV').isFloat().withMessage("El valor debe ser un numero"),
 body('IdUsuarioCliente').isInt().withMessage("El id del cliente debe ser un entero"),
-body('Sucursales_IdSucursal').isInt().withMessage("El id de la sucurdal debe ser un entero")*/,
+body('IdSucursal').isInt().withMessage("El id de la sucurdal debe ser un entero"),
 controladorVentas.modificar);
 
 router.put('/modificarDetalle', body('Cantidad').isInt().withMessage("El valor debe ser un numero"),

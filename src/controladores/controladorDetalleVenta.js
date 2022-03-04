@@ -6,7 +6,7 @@ const sequelize= require('sequelize');
 const { QueryTypes }= require('@sequelize/core')
 const db= require('../configuraciones/db');
 
-//const modeloProducto= require('')
+const modeloProducto= require('../modelos/modeloProductos');
 //let IdVentaRecibido=0;
 
 
@@ -28,21 +28,24 @@ exports.guardarDetalle= async(req,res) => {
    
 
             const idVenta= await db.query('SELECT max(IdVenta) as idVenta from ventas', { type: QueryTypes.SELECT});
-            console.log(idVenta[0].idVenta)
-            /*  var buscarIdVenta= await modeloVentas.findOne({
+              var buscarIdVenta= await modeloVentas.findOne({
                 where: {
                     IdVenta: idVenta[0].idVenta
                 }
-            }); */
+            }); 
 
-          /*  var buscarIdProducto= await modeloProducto.findOne({
+           var buscarIdProducto= await modeloProducto.findOne({
                 where: {
                     IdProducto: IdProducto
                 }
-            });*/
+            });
 
-            if(!idVenta[0].idVenta) {
+            if(!buscarIdVenta) {
                 msj("El numero de factura no existe", 200, idVenta, res);
+            }
+            else if(!buscarIdProducto)
+            {
+                msj("El id de producto no existe", 200, idVenta, res);
             }
             else 
             {   

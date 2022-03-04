@@ -1,7 +1,7 @@
 const { query } = require('express');
 const ModeloSucursales = require('../modelos/modeloSucursales');
 const ModeloProducto = require('../modelos/modeloProductos');
-const ModeloInventario = require('../modelos/modeloInventarios');
+const ModeloInventario = require('../modelos/modeloInventario');
 const db = require('../configuraciones/db');
 const {QueryTypes} = require('sequelize');
 const {validationResult} = require('express-validator');

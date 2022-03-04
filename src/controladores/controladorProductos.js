@@ -1,5 +1,5 @@
 const ModeloProductos= require('../modelos/modeloProductos');
-const ModeloCategoria= require('../modelo/categorias');
+const ModeloCategoria= require('../modelos/modeloCategorias');
 
 exports.inicio = (req,res) => {
     res.send("Esto es inicio en modulo Productos");
