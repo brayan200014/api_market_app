@@ -53,7 +53,7 @@ exports.inicio = (req,res) => {
         const {IdUsuarioCliente, NombreUsuario, Correo, Contrasena, Estado} = req.body;
         if(!IdUsuarioCliente || !NombreUsuario || !Correo || !Contrasena || !Estado)
         {
-        res.send("Debe enviar los datos completos");
+            res.send("Debe enviar los datos completos");
         }
         else
         {
@@ -136,37 +136,6 @@ exports.inicio = (req,res) => {
         }
     }
  };
-
- exports.modificar = async(req, res) =>{
-    const{id}=req.query;
-    const{Estado, Correo}=req.body;
-    if(!id || !Estado || !Correo){
-        res.send("Envie los datos completos");
-    }else{
-        var buscarCliente = await modeloCliente.findOne({
-            where:{
-                IdUsuarioCliente:id
-            }
-        });
-        if(!buscarCliente){
-            res.send("El Id no existe");
-        }else{
-            buscarCliente.Estado=Estado;
-            buscarCliente.Correo=Correo;
-            await buscarCliente.save()
-            .then((data) => {
-                console.log(data);
-                res.send("Registro modificado");
-                
-            })
-            .catch((error) => {
-                console.log(error);
-                res.send("Error al querer modificar los datos");
-            });
-        }
-    }
- };
-
 
  exports.eliminar = async (req,res) => {
     const {IdUsuarioCliente} = req.query;

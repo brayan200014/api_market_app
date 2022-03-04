@@ -16,7 +16,7 @@ const Cliente = db.define("cliente",
         allowNull: false,
     },
     Correo:{
-        type: sequelize.STRING(250),
+        type: sequelize.STRING(60),
         allowNull: false,
     },
     Contrasena:{
