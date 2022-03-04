@@ -1,5 +1,5 @@
 const ModeloProductos= require('../modelos/modeloProductos');
-const ModeloCategoria= require('../modelo/categorias');
+const ModeloCategoria= require('../modelos/modeloCategorias');
 
 exports.inicio = (req,res) => {
     res.send("Esto es inicio en modulo Productos");
@@ -19,9 +19,9 @@ exports.inicio = (req,res) => {
  };
 
  exports.guardarproductos = async (req, res) => {
-    const {categoriaid, nombre} = req.body;
+    const {IdCategoria, NombreProducto} = req.body;
 
-        if(!categoriaid || !nombre )
+        if(!IdCategoria || !NombreProducto )
         {
             res.send("Debe enviar los datos completos");
         }
@@ -29,7 +29,7 @@ exports.inicio = (req,res) => {
 
             const buscarCategoria = await ModeloCategoria.findOne({
                 where:{
-                    id : categoriaid,
+                    id : IdCategoria,
                 }
             });
             if(!buscarCategoria){
@@ -37,8 +37,8 @@ exports.inicio = (req,res) => {
             }
             else{
                     await ModeloProductos.create({
-                    categoriaid: categoriaid,
-                    nombre: nombre,        
+                    IdCategoria: IdCategoria,
+                    NombreProducto: NombreProducto,        
                 }).then((data) => {
                     console.log(data);
                     res.send("Registro almacenado correctamente");
@@ -51,8 +51,8 @@ exports.inicio = (req,res) => {
  };
 
  exports.modificarProductos = async (req,res) => {
-    const {id} = req.query; 
-    const {nombre} = req.body;
+    const {IdProducto} = req.query; 
+    const {NombreProducto} = req.body;
     if(!id)
     {
         res.send("Debe enviar el id del Producto");
@@ -61,7 +61,7 @@ exports.inicio = (req,res) => {
     var buscarproducto = await ModeloProductos.findOne(
         {
             where: {
-                id: id,
+                IdProducto: IdProducto,
             }
         }
     );
@@ -72,7 +72,7 @@ exports.inicio = (req,res) => {
     else
     {
             //va a guardar los datos
-                buscarproducto.nombre = nombre;
+                buscarproducto.NombreProducto = NombreProducto;
                 await buscarUsuario 
                 .save().then((data) => {
                 console.log(data);
@@ -86,9 +86,9 @@ exports.inicio = (req,res) => {
 
  exports.eliminarproducto = async (req,res) => {
   
-    const {id} = req.query; 
+    const {IdProducto} = req.query; 
 
-    if(!id)
+    if(!IdProducto)
     {
         res.send("Debe enviar el id de la persona");
     }
@@ -97,7 +97,7 @@ exports.inicio = (req,res) => {
         var buscarproducto = await ModeloProductos.findOne(
             {
                 where: {
-                    id: id,
+                    IdProducto: IdProducto,
                 }
             }
         );
@@ -111,7 +111,7 @@ exports.inicio = (req,res) => {
                     await ModeloProductos.destroy({
                         where:
                         {
-                            id: id,
+                            IdProducto: IdProducto,
                         }
                     }).then((data) => {
                     console.log(data);

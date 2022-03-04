@@ -5,7 +5,7 @@ exports.inicio = (req,res) => {
     res.send("Esto es inicio en modulo Cliente");
  };
 
- exports.listarCliente= async (req,res) => {
+ exports.listar= async (req,res) => {
 
     const listaCliente = await modeloCliente.findAll();
 
@@ -18,68 +18,114 @@ exports.inicio = (req,res) => {
     }
  };
 
- exports.buscarCliente= async (req,res) => {
+ exports.buscar= async (req,res) => {
 
-    const { estado } =req.query;
-    const buscarCliente = await modeloCliente.findAll({
-        where:{
-            estado : estado
-        }
-    });
-
-    //validacion
-    if(!buscarCliente || !buscarCliente.length)
-    {
-        res.send("No se encontraron registros");
+    const { id } =req.query;
+    if(!id){
+        res.send("No enviar Id vacio");
     }
     else{
-        res.json(buscarCliente);
+        const buscarCliente = await modeloCliente.findOne({
+            where:{
+                IdUsuarioCliente:id
+            }
+        });
+    
+        //validacion
+        if(!buscarCliente)
+        {
+            res.send("No se encontraron registros");
+        }
+        else{
+            res.json(buscarCliente);
+        }
     }
  };
 
- exports.guardarClientes = async (req,res) => {
-    const validacion = validationResult(req);
-    if(!validacion.isEmpty()){
-        res.json(validacion.array());
-    }
-    else{
-        const {id, nombre, correo, contraseña} = req.body;
-
-        if(!id || !nombre || !correo || !contraseña)
-        {
+ exports.guardar = async (req,res) => {
+        const{IdUsuarioCliente, NombreUsuario, Correo, Contrasena} = req.body;
+        if(!IdUsuarioCliente || !NombreUsuario || !Correo || !Contrasena){
             res.send("Debe enviar los datos completos");
         }
         else{
+            await modeloCliente.create({
+                IdUsuarioCliente,
+                NombreUsuario,
+                Correo,
+                Contrasena,
+            })
+            .then((data)=>{
+                console.log(data);
+                res.send("Registro Almacenado");
+            })
+            .catch((error)=>{
+                console.log(error);
+                res.send("Error al guardar los datos")
+            })
+        }
 
-            const buscarCliente = await modeloCliente.findOne({
-                where:{
-                    id : id,
-                    estado : true
-                }
+ };
+ 
+ exports.modificarCorreo = async(req, res) =>{
+    const{id}=req.query;
+    const{Correo}=req.body;
+    if(!id || !Correo){
+        res.send("Envie los datos completos");
+    }else{
+        var buscarCliente = await modeloCliente.findOne({
+            where:{
+                IdUsuarioCliente:id
+            }
+        });
+        if(!buscarCliente){
+            res.send("El Id no existe");
+        }else{
+            buscarCliente.Correo=Correo;
+            await buscarCliente.save()
+            .then((data) => {
+                console.log(data);
+                res.send("Registro modificado");
+                
+            })
+            .catch((error) => {
+                console.log(error);
+                res.send("Error al querer modificar los datos");
+
             });
-            if(!buscarCliente){
-                res.send("El id de la persona no existe/inactivo");
-            }
-            else{
-                    await modeloCliente.create({
-                    id: id,
-                    login: login,
-                    correo: correo,
-                    contraseña : contraseña,
-        
-                }).then((data) => {
-                    console.log(data);
-                    res.send("Registro almacenado correctamente");
-                }).catch((error) => {
-                    console.log(error);
-                    res.send("Error al guardar datos");
-                });
-            }
         }
     }
  };
 
- exports.eliminarCliente = async (req,res) => {
+ exports.modificarEstado = async(req, res) =>{
+    const{id}=req.query;
+    const{Estado}=req.body;
+    if(!id || !Estado){
+        res.send("Envie los datos completos");
+    }else{
+        var buscarCliente = await modeloCliente.findOne({
+            where:{
+                IdUsuarioCliente:id
+            }
+        });
+        if(!buscarCliente){
+            res.send("El Id no existe");
+        }else{
+            buscarCliente.Estado=Estado;
+            await buscarCliente.save()
+            .then((data) => {
+                console.log(data);
+                res.send("Registro modificado");
+                
+            })
+            .catch((error) => {
+                console.log(error);
+                res.send("Error al querer modificar los datos");
+            });
+        }
+    }
+ };
+
+ exports.eliminar = async (req,res) => {
   
     const {id} = req.query; 
 
@@ -92,7 +138,7 @@ exports.inicio = (req,res) => {
         var buscarCliente = await modeloCliente.findOne(
             {
                 where: {
-                    id: id,
+                    IdUsuarioCliente: id,
                 }
             }
         );

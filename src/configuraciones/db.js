@@ -2,7 +2,7 @@ const sequelize= require('sequelize');
 const db= new sequelize (
     'basemovil',
     'root',
-    'password',
+    'unicah123',
     {
         host: 'localhost',
         dialect: 'mysql',
