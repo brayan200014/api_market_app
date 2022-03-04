@@ -4,10 +4,10 @@ const db = require('../configuraciones/db');
 const msj= require('../componentes/mensaje');
 const {QueryTypes} = require('sequelize');
 const {validationResult} = require('express-validator');
-
+/*
 exports.inicio = (req, res) =>{
     res.send("Usted se encuentra en Modulo Categorias");
-};
+};*/
 
 //listar Categorias
 exports.listar= async (req,res) => {

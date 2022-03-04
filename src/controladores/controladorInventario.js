@@ -1,22 +1,21 @@
 const { query } = require('express');
 const ModeloSucursales = require('../modelos/modeloSucursales');
 const ModeloProducto = require('../modelos/modeloProductos');
-const ModeloInventario = require('../modelos/modeloInventarios');
+const ModeloInventario = require('../modelos/modeloInventario');
 const db = require('../configuraciones/db');
 const {QueryTypes} = require('sequelize');
 const {validationResult} = require('express-validator');
 
-
+/*
 exports.inicio = (req, res) =>{
     res.send("Usted se encuentra en Modulo Inventario");
-};
+};*/
 
 //listar Inventario
 exports.listarInventario = async (req, res) => {
     const listarInventario = await db.query("select * from vista_inventario",{type:QueryTypes.SELECT}); 
     if(listarInventario.length==0){
         res.send("No existen datos!!!");
-
     }
     else{
         res.json(listarInventario);
