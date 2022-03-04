@@ -1,45 +1,36 @@
 const sequelize  =  require('sequelize');
 const db = require('../configuraciones/db');
+const Categorias= require('../modelos/modeloCategorias')
 
 const Producto = db.define("producto",
 {
-    id:{
+    IdProducto:{
         type: sequelize.INTEGER,
         primaryKey: true ,
         autoIncrement: true,
         allowNull: false,      
     },
-    nombre:{
+    NombreProducto:{
         type: sequelize.STRING(45),
         allowNull: false,
     },
-    descripcion:{
+    DescripcionProducto:{
         type: sequelize.STRING(250),
         allowNull: true,
     },
-   impuesto:{
+   ISV:{
         type: sequelize.DOUBLE,
         allowNull: true,
     },
-    precio:{
-        type: sequelize.DOUBLE,
-        allowNull: true,
-     
-    },
-    estado:{
+    Estado:{
         type: sequelize.TINYINT(1),
         allowNull: true,
        
     },
-    imagen:{
+    Imagen:{
         type: sequelize.STRING(250),
         allowNull: true,
-    },
-    categoriaid:{
-        type: sequelize.INTEGER,
-        allowNull: false,
-        //agregando la foranea
-    },
+    }
 },
 {
     tableName: "productos",
@@ -47,4 +38,6 @@ const Producto = db.define("producto",
 }
 
 );
+
+Categorias.hasOne(Producto, {foreignKey: 'Categorias_IdCategoria'});
 module.exports=Producto;

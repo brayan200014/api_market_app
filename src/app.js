@@ -15,7 +15,7 @@ app.use('/api/autenticacion/', require('./rutas/rutasAutenticacion'));
 app.use('/', require('./rutas/rutasProveedores'));
 app.use('/api/ventas', require('./rutas/rutasVentas'));
 app.use('/api/archivos', require('./rutas/rutasArchivos')); 
-app.use('/api/cliente',require('./rutas/rutaClientes'));
+app.use('/api/cliente',require('./rutas/rutasClientes'));
 app.use('/api/productos', require('./rutas/rutasProductos')); 
 app.use('/api/inventario/', require('./rutas/rutasInventario'));
 app.use('/api/categorias/', require('./rutas/rutasCategorias'));
