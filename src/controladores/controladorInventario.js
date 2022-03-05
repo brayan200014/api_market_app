@@ -6,17 +6,16 @@ const db = require('../configuraciones/db');
 const {QueryTypes} = require('sequelize');
 const {validationResult} = require('express-validator');
 
-
+/*
 exports.inicio = (req, res) =>{
     res.send("Usted se encuentra en Modulo Inventario");
-};
+};*/
 
 //listar Inventario
 exports.listarInventario = async (req, res) => {
-    const listarInventario = await db.query("select * from vista_inventario",{type:QueryTypes.SELECT}); 
+    const listarInventario = await db.query("select * from vistaInventario",{type:QueryTypes.SELECT}); 
     if(listarInventario.length==0){
         res.send("No existen datos!!!");
-
     }
     else{
         res.json(listarInventario);
@@ -79,27 +78,21 @@ exports.guardarInventario = async (req, res) => {
         res.json(validacion.array());
     }
     else{
-        const {Productos_IdProducto, Sucursales_IdSucursal ,CantidadExistencia,PrecioVenta} = req.body;
+        const {Productos_IdProducto, Sucursales_IdSucursal,CantidadExistencia,PrecioVenta} = req.body;
+        const buscarproducto = await ModeloProducto.findOne({
+            where:{
+                IdProducto : Productos_IdProducto,
+            }
+        });
 
-    if(!Productos_IdProducto ||!Sucursales_IdSucursal){
-        res.send("Debe enviar los datos completos");
-    }
-    else{
-            const buscarSucursal = await ModeloSucursales.findOne({
-                where:{
-                    IdSucursal : Sucursales_IdSucursal,
-                }
-            });
-            if(!buscarSucursal){
-                const buscarProducto = await ModeloProducto.findOne({
-                    where:{
-                        IdProducto: Productos_IdProducto,
-                    }
-                });
-                if (!buscarProducto) {
-                    res.send("El producto no existe");
-                } else 
-                {
+        if(!Productos_IdProducto || !Sucursales_IdSucursal){
+            res.send("Debe enviar los datos completos");
+        }
+        
+           else if (!buscarproducto){
+            res.send("El producto no esta registrado!!");
+        }
+                else {
                     await ModeloInventario.create({
                         Productos_IdProducto,
                         Sucursales_IdSucursal,
@@ -115,15 +108,10 @@ exports.guardarInventario = async (req, res) => {
                     .catch((error) => {
                         console.log(error);
                         res.send("Error al guardar en inventario");    
-                    });
-                }    
+                    });    
+                }
             }
-            else{
-                res.send("El ID de la sucursal no existe o esta inactivo");
-            }
-        }
-    }
-};
+    };
 
 //eliminar en inventario
 exports.eliminarInventario = async (req, res) => {
