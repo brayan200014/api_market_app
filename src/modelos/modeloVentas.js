@@ -1,7 +1,8 @@
 const sequelize= require('sequelize'); 
 const db= require('../configuraciones/db');
-//const UsuarioCliente= require(''); 
-//const Sucursal= require('');
+const Usuario= require('../modelos/modeloClientes');
+const Sucursal= require('../modelos/modeloSucursales');
+
 
 
 
@@ -27,10 +28,6 @@ const Venta= db.define(
         ISV: {
             type: sequelize.DOUBLE,
             allowNull: false
-        },
-        imagen: {
-            type: sequelize.STRING,
-            allowNull:true
         }
     },
     {
@@ -39,7 +36,7 @@ const Venta= db.define(
     }
 );
 
-/*UsuarioCliente.hasOne(Venta, {foreignKey: 'IdUsuarioCliente'});
-Sucursal.hasOne(Venta, {foreignKey: 'Sucursales_IdSucursal' })*/
+Usuario.hasOne(Venta, {foreignKey: 'IdUsuarioCliente'});
+Sucursal.hasOne(Venta, {foreignKey: 'Sucursales_IdSucursal' })
 
 module.exports= Venta;

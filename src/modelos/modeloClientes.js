@@ -27,7 +27,7 @@ const Cliente = db.define("cliente",
         allowNull: true,
     },
     Estado:{
-        type: sequelize.BOOLEAN,
+        type: sequelize.TINYINT(1),
         allowNull: true,
         defaultValue: true,
     },

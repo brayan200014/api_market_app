@@ -4,10 +4,10 @@ const msj= require('../componentes/mensaje');
 const modeloDetalleVenta= require('../modelos/modeloDetalleVenta');
 //const modeloProducto= require('')
 const controladorDetalleVenta= require('../controladores/controladorDetalleVenta');
-var Venta_IdVenta=0;
+//var Venta_IdVenta=0;
 
-//const modeloUsuarioCliente= require(''); 
-//const modeloSucursal= require('');
+const modeloUsuarioCliente= require('../modelos/modeloClientes'); 
+const modeloSucursal= require('../modelos/modeloSucursales');
 
 exports.listar= async (req,res) => {
     const listarVentas= await modeloVentas.findAll();
@@ -63,27 +63,25 @@ exports.guardar= async (req,res) => {
     }
     else 
     {
-        const {FechaVenta, Subtotal, ISV}= req.body;
+        const {FechaVenta, Subtotal, ISV,IdUsuarioCliente, IdSucursal}= req.body;
 
-        if(!FechaVenta || !Subtotal || !ISV) {
+        if(!FechaVenta || !Subtotal || !ISV || !IdUsuarioCliente || !IdSucursal) {
             msj("Hay datos vacios al enviar los datos", 200, [], res); 
         }
         else 
         {
 
 
-           /* var buscarIdCliente; 
-            var buscarIdSucursal;*/
-           /* var buscarIdCliente= await modeloUsuarioCliente.findOne({
-               where: {
-                   IdUsuarioCliente: IdUsuarioCliente,
-                   Estado: 1
-               }
-           })
-
+            var buscarIdCliente= await modeloUsuarioCliente.findOne({
+                where: {
+                    IdUsuarioCliente: IdUsuarioCliente,
+                    Estado: 1
+                }
+            })
+            
            var buscarIdSucursal= await modeloSucursal.findOne({
                where: {
-                  IdSucursal : Sucursales_IdSucursal
+                  IdSucursal : IdSucursal
                }
            })
 
@@ -94,23 +92,23 @@ exports.guardar= async (req,res) => {
                msj("El id de la sucursal no existe", 200, [], res);
            }
            else 
-           {*/
+           {
                await modeloVentas.create({
                    FechaVenta: FechaVenta, 
                    Subtotal: Subtotal,
-                   ISV: ISV 
-                 /*  IdUsuarioCliente: buscarIdCliente,
-                   Sucursales_IdSucursal: buscarIdSucursal*/
+                   ISV: ISV,
+                   IdUsuarioCliente: buscarIdCliente.IdUsuarioCliente,
+                   Sucursales_IdSucursal: buscarIdSucursal.IdSucursal
                 
                }).then((data) => {
-                   Venta_IdVenta= data.IdVenta;
+                  // Venta_IdVenta= data.IdVenta;
                    msj("Registro Almacenado", 200, [], res);
                  
                }).catch((error) => {
                    msj("Ocurrio un error al almacenar los datos", 200,[], res);
                    console.log(error);
                })
-         //  }
+           }
 
     
 
@@ -129,9 +127,9 @@ exports.modificar= async (req,res)=>{
     }
     else {
         const {id}= req.query;
-        const {FechaVenta, Subtotal, ISV, IdUsuarioCliente, Sucursales_IdSucursal}= req.body;
+        const {FechaVenta, Subtotal, ISV, IdUsuarioCliente,IdSucursal}= req.body;
 
-        if(!FechaVenta || !Subtotal || !ISV /*|| !IdUsuarioCliente || !Sucursales_IdSucursal*/) {
+        if(!FechaVenta || !Subtotal || !ISV || !IdUsuarioCliente || !IdSucursal) {
             msj("Hay datos vacios al enviar los datos", 200, [], res); 
         }
         else 
@@ -148,7 +146,7 @@ exports.modificar= async (req,res)=>{
                 });
 
 
-                /* var buscarIdCliente= await modeloUsuarioCliente.findOne({
+             var buscarIdCliente= await modeloUsuarioCliente.findOne({
                where: {
                    IdUsuarioCliente: IdUsuarioCliente,
                    Estado: 1
@@ -157,27 +155,27 @@ exports.modificar= async (req,res)=>{
 
                 var buscarIdSucursal= await modeloSucursal.findOne({
                     where: {
-                        IdSucursal : Sucursales_IdSucursal
+                        IdSucursal : IdSucursal
                     }
-                })*/
+                })
 
 
-           if(!id) {
+           if(!buscarVenta) {
                msj("El numero de factura no existe en la base de datos", 200, [], res);
            }
-         /*  else  if(!buscarIdCliente) {
+          else  if(!buscarIdCliente) {
             msj("El Id de Usuario Cliente no existe o esta inactivo", 200,[], res);
             }
             else if(!buscarIdSucursal) {
                 msj("El id de la sucursal no existe", 200, [], res);
-            }*/
+            }
             else 
             {
                 buscarVenta.FechaVenta= FechaVenta; 
                 buscarVenta.Subtotal= Subtotal; 
                 buscarVenta.ISV= ISV;
-               /* buscarVenta.IdUsuarioCliente= buscarIdCliente; 
-                buscarVenta.Sucursales_IdSucursal= buscarIdSucursal;*/
+                buscarVenta.IdUsuarioCliente= buscarIdCliente.IdUsuarioCliente; 
+                buscarVenta.Sucursales_IdSucursal= buscarIdSucursal.IdSucursal;
 
                 await buscarVenta.save().then((data)=> {
                     msj("Registro Actualizado Exitosamente", 200, [], res);
