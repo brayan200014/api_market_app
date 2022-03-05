@@ -3,111 +3,69 @@ const enviarCorreo = require('../configuraciones/correo');
 const ModeloUsuario = require('../modelos/modeloClientes');
 const passport = require('../configuraciones/passport');
 const msj = require('../componentes/mensaje');
+//const bcrypt = require('bcrypt');
 
 //RECUPERAR CONTRASEÑA
 exports.recuperarContrasena = async (req, res) =>{
     const validacion = validationResult(req);
-    if(validacion.isEmpty()){
+
+    if(!validacion.isEmpty()){
+        console.log("Hola");
         res.json(validacion.array());
     }
     else{
-        const {correo} = req.body;
-        var buscarUsuario = await ModeloUsuario.finOne({
+        const { correo } = req.body;
+        var buscarUsuario = await ModeloUsuario.findOne({
             where:{
-                correo: correo
+                Correo: correo
             }
         });
         const pin = Math.floor(Math.random() * (9999-1000)) + 1000;
-        console.log(pin);
+        
         if(buscarUsuario){
-            const data = {
-                correo: correo,
+            const dataRecuperacion = {
+                correo: correo, //Este correo es el que esta en cnfiguraciones data.correo
                 pin: pin,
             };
-            if(enviarCorreo.recuperarContrasena(data)){
+
+            buscarUsuario.pin = pin;
+            await buscarUsuario.save().then((data)=>{
+                if(enviarCorreo.recuperarContrasena(dataRecuperacion)){
+                console.log(data);
                 res.send("Correo Enviado");
             }
-            else{
+            else{ 
                 res.send("Error al enviar el correo");
-            }
-            
+            }  
+
+            });
         }
     }
-};
-
-//Validacion de Autenticado
-exports.ValidarAutenticado = passport.ValidarAutenticado;
-
-//INICIO DE SESION - USUARIO
-exports.InicioSesion = async (req, res) => {
-    const validacion =  validationResult(req);
-    if(validacion.isEmpty()){
-        msj("Los datos son invalidos", 200, validacion.array(), res);
-    }
-    else{
-       const { usuario, contrasena } = req.body;
-       const buscarUsuario = await ModeloUsuario.finOne({
-           where:{
-
-               correo: usuario,
-
-           }
-       });
-       if(!buscarUsuario){
-           msj("Los datos son incorrectos", 200, [], res);
-       }
-       else
-       {
-           if(buscarUsuario.VerificarContraseña(contrasena, buscarUsuario, contrasena)){
-            msj("El usuario y/o contraseña son incorrectos", 200, [], res);
-           }
-           else{
-               const Token = passport.generarToken({id: buscarUsuario.id});
-               const data = {
-                   token: Token,
-                   data: buscarUsuario
-               };
-               msj("Bienvenido a Supermercados", 200, data, res);
-            }
-        }
-    }
-};
-
-//Mensaje de Error
-exports.Error = (req, res) =>{
-    msj("Debe estar autenticado", 200, [], res);
-
-};
-
-//LOGIN
-exports.homeLogin = async (req, res) => {
-    res.send("LOGIN - PRINCIPAL");
 };
 
 //CAMBIAR CONTRASEÑA
 exports.cambiarContra = async (req, res) => {
     const validacion = validationResult(req);
-    const {nombreUsuario, contraseniaActual, contraseniaNueva} = req.body;
+    const {Correo, pin ,contraseniaNueva, confirmarContrasena} = req.body;
 
     if(!validacion.isEmpty()){
-        console.log("\n" + validacion.array());
-        res.json("\n La contraseña no se ha posido modificar ya que el campo proporcionados no son del tipo requerido.\n\n" + validacion.array());
+        console.log(validacion.array());
+        res.json(validacion.array());
     }else{
-        if(!nombreUsuario || !contraseniaActual || !contraseniaNueva){
-            res.send("La contraseña no se ha posido modificar ya que el campo proporcionados no son del tipo requerido.")
-        }else{
-            let findByID = await UsuarioModel.findOne({
+            let findByID = await ModeloUsuario.findOne({
                 where:{
-                    nombreUsuario: nombreUsuario
+                    Correo: Correo,
+                    pin: pin
                 }
             });
             if(!findByID){
-                res.send("No se encontraron resultados con el identificador {"+ nombreUsuario +"} en {usuarioscliente}.");
+                res.send("No se encontro ningun usuario con correo = ["+ Correo +"] y pin de verificación ["+ pin +"] en [usuarioscliente].");
             }else{
-                const validPassword = await bcrypt.compare(contraseniaActual, findByID.contrasenia);
-                if (validPassword) {
 
-                    findByID.contrasenia = contraseniaNueva;
+                    findByID.Contrasena = contraseniaNueva;
+                    //findByID.Contrasena = bcrypt.hashSync(contraseniaNueva, 10); //Con esto encripto manualmente la contraseña sin el trigger, para esto hay queeliminar el triger Update del ModeloCliente
+
+                    findByID.pin = "";
 
                     await findByID.save().then((data) => {
                         console.log(data);
@@ -118,33 +76,59 @@ exports.cambiarContra = async (req, res) => {
                         res.send("NO fue posible actualizar la información");     
                     });
                 
-                }else{
-                    res.send("CAMBIO DE CONTRASEÑA CANCELADO: La contraseña actual no coincide con el dato proporcionado.");
                 }
+        }
+};
+    
+//Validacion de Autenticado
+exports.ValidarAutenticado = passport.ValidarAutenticado;
+
+
+//INICIO DE SESION - USUARIO
+exports.InicioSesion = async (req, res) => {
+    const validacion =  validationResult(req);
+    if(!validacion.isEmpty()){
+        msj("Los datos son invalidos", 200, validacion.array(), res);
+    }
+    else{
+       const { Correo , Contrasena} = req.body;
+       const buscarUsuario = await ModeloUsuario.findOne({
+           where:{
+
+               Correo: Correo,
+
+           }
+       });
+       if(!buscarUsuario){
+           msj("Los datos son incorrectos", 200, [], res);
+       }
+       else
+       {
+           if(!buscarUsuario.VerificarContraseña(Contrasena, buscarUsuario.Contrasena)){
+            msj("El usuario y/o contraseña son incorrectos", 200, [], res);
+           }
+           else{
+               const Token = passport.generarToken({IdUsuarioCliente: buscarUsuario.IdUsuarioCliente});
+               const data = {
+                   token: Token,
+                   data: buscarUsuario
+               };
+               msj("Bienvenido a Supermercados Móvil", 200, data, res);
             }
         }
     }
 };
 
-//RECUPERAR CONTRASEÑA
-exports.recuperarPassword = async (req, res) =>{
-    const {correo} = req.body;
-    const buscarUsuario = await UsuarioModel.findOne({
-        where:{
-            correo: correo
-        }
-    });
-    const pin2 = '1234';
-    const data = {
-        correo: correo,
-        pin: '1234'
-    }
-    SendMail.passwordRecovery(data);
-    res.send("Correo Enviado");
+
+//Mensaje de Error
+exports.Error = (req, res) =>{
+    msj("Debe estar autenticado", 200, [], res);
 };
 
-//SALIR
-exports.logout = async (req, res) => {
+
+//LOGIN
+exports.homeLogin = async (req, res) => {
+    res.send("LOGIN - PRINCIPAL");
 };
 
 
