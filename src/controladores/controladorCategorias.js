@@ -10,7 +10,7 @@ exports.inicio = (req, res) =>{
 };
 
 //listar Categorias
-exports.listar= async (req,res) => {
+exports.listar = async (req,res) => {
     const listarCategorias= await ModeloCategoria.findAll();
 
     if(listarCategorias.length==0) {
