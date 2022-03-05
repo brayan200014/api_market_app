@@ -2,6 +2,10 @@ const { validationResult } = require('express-validator');
 const mensaje = require('../componentes/mensaje');
 const modeloCompra = require('../modelos/modeloCompras');
 
+const modeloEmpleado = require('../modelos/modeloEmpleados');
+const modeloSucursal= require('../modelos/modeloSucursales');
+const modeloProveedor = require('../modelos/modeloProveedores');
+
 exports.listarCompras = async(req, res)=>{
     const listarCompras = await modeloCompra.findAll();
     if(listarCompras.length == 0){
@@ -15,7 +19,7 @@ exports.guardarCompra = async (req, res)=>{
     const validar = validationResult(req);
 
     if(!validar.isEmpty()){
-        res.json(validar());
+        res.json(validar.array());
     }
     else{
         const {FechaCompra, Subtotal, ISV, Empleados_IdEmpleado, Sucursales_IdSucursal, Proveedores_IdProveedor} = req.body;
@@ -52,6 +56,7 @@ exports.guardarCompra = async (req, res)=>{
             })
             .catch((error)=>{
                 mensaje("ERROR! No se pudo almacenar la Compra.", 200, error, res);
+                console.log(error);
             });
         }
     }
@@ -60,13 +65,13 @@ exports.modificarCompra= async (req, res)=>{
     const validar = validationResult(req);
 
     if(!validar.isEmpty()){
-        res.json(validar());
+        res.json(validar.array());
     }
     else{
         const { IdCompra } = req.query;
-        const {FechaCompra, Subtotal, ISV} = req.body;
+        const {FechaCompra, Subtotal, ISV, Empleados_IdEmpleado, Sucursales_IdSucursal, Proveedores_IdProveedor} = req.body;
 
-        if(!idCompra){
+        if(!IdCompra){
             mensaje("Debe de ingresar un numero de Compra VALIDO.");
         }
         else if(!FechaCompra){
@@ -79,21 +84,53 @@ exports.modificarCompra= async (req, res)=>{
             mensaje("No debe dejar el impuesto vacio.", 200, [], res);
         }
         else{
+
             var buscarCompra = await modeloCompra.findOne({
                 where:{
                     IdCompra: IdCompra,
                 }
             });
+
+            var buscarIdEmpleado = await modeloEmpleado.findOne({
+                where:{
+                    IdEmpleado: Empleados_IdEmpleado
+                }
+            });
+
+            var buscarIdSucursal = await modeloSucursal.findOne({
+                where:{
+                    IdSucursal: Sucursales_IdSucursal
+                }
+            });
+            
+            var buscarIdProveedor = await modeloProveedor.findOne({
+                where:{
+                    IdProveedor: Proveedores_IdProveedor
+                } 
+            });
+
             if(!buscarCompra){
                 mensaje("El numero de Compra que desea Actualizar NO existe.", 200, [], res);
+            }
+            else if(!buscarIdEmpleado){
+                mensaje("El Id del empleado NO existe.", 200, [], res);
+            }
+            else if(!buscarIdSucursal){
+                mensaje("El Id de la sucursal NO existe.", 200, [], res);
+            }
+            else if(!buscarIdProveedor){
+                mensaje("El Id del Proveedor NO existe.", 200, [], res);
             }
             else{
                 buscarCompra.FechaCompra = FechaCompra;
                 buscarCompra.Subtotal = Subtotal;
                 buscarCompra.ISV = ISV;
+                buscarCompra.Empleados_IdEmpleado = buscarIdEmpleado.IdEmpleado;
+                buscarCompra.Sucursales_IdSucursal = buscarIdSucursal.IdSucursal;
+                buscarCompra.Proveedores_IdProveedor = buscarIdProveedor.IdProveedor;
                 await buscarCompra.save()
                 .then((data)=>{
-                    mensaje("Compra Actualizada Exitosamente", 200, [], res);
+                    mensaje("Compra Actualizada Exitosamente", 200, data, res);
                 })
                 .catch((error) =>{
                     mensaje("ERROR al actualizar la Compra", 200, error, res);
@@ -104,33 +141,70 @@ exports.modificarCompra= async (req, res)=>{
     }  
 };
 exports.eliminarCompra = async (req, res) =>{
-    const { IdCompra } = req.query;
 
-    if(!IdCompra){
-        mensaje("Ingrese un numero de Compra a Eliminar");
+    const validar = validationResult(req);
+
+    if(!validar.isEmpty()){
+        res.json(validar.array());
     }
     else{
-        var buscarCompra = await modeloCompra.findOne({
-            where:{
-                IdCompra: IdCompra,
-            }
-        }); 
-        if(!buscarCompra){
-            mensaje("El ID de compra Ingresado NO existe.");
+        const { IdCompra } = req.query;
+        console.log(IdCompra);
+    
+        if(!IdCompra){
+            mensaje("Ingrese un numero de Compra a Eliminar");
         }
         else{
-            await modeloCompra.destroy({
+            var buscarCompra = await modeloCompra.findOne({
                 where:{
                     IdCompra: IdCompra,
                 }
-            })
-            .then((data)=>{
-                console.log(data);
-                mensaje("Registro Eliminado Exitosamente", 200, [], res);
-            })
-            .catch((error)=>{
-                mensaje("Error al Eliminar la Compra", 200, error, res);
+            }); 
+            if(!buscarCompra){
+                mensaje("El ID de compra Ingresado NO existe.");
+            }
+            else{
+                await modeloCompra.destroy({
+                    where:{
+                        IdCompra: IdCompra,
+                    }
+                })
+                .then((data)=>{
+                    console.log(data);
+                    mensaje("Registro Eliminado Exitosamente", 200, [], res);
+                })
+                .catch((error)=>{
+                    mensaje("Error al Eliminar la Compra", 200, error, res);
+                });
+            }
+        }
+    }
+};
+exports.listarUnaCompra = async(req, res) =>{
+    const validar = validationResult(req);
+
+    if(!validar.isEmpty()){
+        res.json(validar.array());
+    }
+    else{
+        const {id} = req.query;
+
+        if(!id){
+            mensaje("El ID no contiene ningun dato.", 200, [], res);
+        }
+        else{
+            const buscarCompra = await modeloCompra.findOne({
+                where: {
+                    IdCompra: id
+                }
             });
+
+            if(!buscarCompra){
+                mensaje("El numero de compra ingreso no existe, ingrese un numero de compra valido.", 200, [], res);
+            }
+            else{
+                mensaje("Datos", 200, buscarCompra, res);
+            }
         }
     }
 };

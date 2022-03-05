@@ -1,5 +1,8 @@
 const sequelize = require('sequelize');
 const db = require('../configuraciones/db');
+const Empleado = require('../modelos/modeloEmpleados');
+const Sucursal= require('../modelos/modeloSucursales');
+const Proveedor = require('../modelos/modeloProveedores');
 
 const Compra = db.define(
     "compra",
@@ -28,4 +31,9 @@ const Compra = db.define(
         timestamps: false
     }
 );
+
+Empleado.hasOne(Compra, {foreignKey: 'Empleados_IdEmpleado'});
+Sucursal.hasOne(Compra, {foreignKey: 'Sucursales_IdSucursal' });
+Proveedor.hasOne(Compra, {foreignKey: 'Proveedores_IdProveedor'});
+
 module.exports = Compra;

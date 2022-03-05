@@ -1,5 +1,7 @@
 const sequelize = require('sequelize');
 const db = require('../configuraciones/db');
+const Compra = require('../modelos/modeloCompras');
+const Producto = require('../modelos/modeloProductos');
 
 const DetalleCompra = db.define(
     "detallecompra",
@@ -27,5 +29,8 @@ const DetalleCompra = db.define(
         timestamps: false
     }
 );
+
+Compra.belongsToMany(Producto, {through: DetalleCompra, foreignKey: 'Compras_IdCompra'});
+Producto.belongsToMany(Compra,{through:DetalleCompra, foreignKey: 'Productos_IdProducto'});
 
 module.exports = DetalleCompra;

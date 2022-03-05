@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const controladorCiudades = require('../controladores/controladorCategorias');
+const controladorCategorias = require('../controladores/controladorCategorias');
 const { body, query } = require('express-validator'); 
 const router = Router();
 router.get('/listar/', controladorCategorias.listar);

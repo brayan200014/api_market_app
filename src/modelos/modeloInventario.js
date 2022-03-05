@@ -1,20 +1,10 @@
 const sequelize = require('sequelize');
 const db = require('../configuraciones/db');
+const Producto= require('../modelos/modeloProductos');
+const Sucursal= require('../modelos/modeloSucursales');
 const Inventario = db.define(
     "invetario",
     {
-        Productos_IdProducto:{
-            type:sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: false,
-            allowNull: false,
-        },
-        Sucursales_IdSucursal:{
-            type:sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: false,
-            allowNull: false, 
-        },
         CantidadExistencia:{
             type:sequelize.INTEGER,
             allowNull:false,
@@ -31,4 +21,8 @@ const Inventario = db.define(
 
     }
 );
+
+Sucursal.belongsToMany(Producto, {through:Inventario, foreignKey: 'Productos_IdProducto'});
+Producto.belongsToMany(Sucursal,{through:Inventario, foreignKey: 'Sucursales_IdSucursal'});
+
 module.exports= Inventario;
