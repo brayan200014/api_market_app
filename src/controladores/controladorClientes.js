@@ -37,45 +37,40 @@ exports.inicio = (req,res) => {
     }
  };
 
- exports.guardarClientes = async (req,res) => {
+ //GUARDAR CLIENTES
+ exports.guardar = async (req,res) => {
     const validacion = validationResult(req);
-    if(!validacion.isEmpty()){
+    if(!validacion.isEmpty())
+    {
         res.json(validacion.array());
     }
-    else{
-        const {id, nombre, correo, contraseña} = req.body;
-
-        if(!id || !nombre || !correo || !contraseña)
+    else
+    {
+        const {IdUsuarioCliente, NombreUsuario, Correo, Contrasena, Estado} = req.body;
+        if(!IdUsuarioCliente || !NombreUsuario || !Correo || !Contrasena || !Estado)
         {
             res.send("Debe enviar los datos completos");
         }
-        else{
-
-            const buscarCliente = await modeloCliente.findOne({
-                where:{
-                    id : id,
-                    estado : true
-                }
+        else
+        {
+            await modeloCliente.create({
+                IdUsuarioCliente,
+                NombreUsuario,
+                Correo,
+                Contrasena, 
+                Estado,
+            })
+            .then((data) => 
+            {
+                console.log(data);
+                res.send("Registro Listo");     
+            })
+            .catch((error) =>
+            {
+                console.log(error);
+                res.send("Error al guardar");    
             });
-            if(!buscarCliente){
-                res.send("El id de la persona no existe/inactivo");
-            }
-            else{
-                    await modeloCliente.create({
-                    id: id,
-                    login: login,
-                    correo: correo,
-                    contraseña : contraseña,
-        
-                }).then((data) => {
-                    console.log(data);
-                    res.send("Registro almacenado correctamente");
-                }).catch((error) => {
-                    console.log(error);
-                    res.send("Error al guardar datos");
-                });
-            }
-        }
+        }    
     }
  };
 

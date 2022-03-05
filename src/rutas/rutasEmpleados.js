@@ -1,9 +1,10 @@
 const { Router } = require('express');
 const controladorEmpleados = require('../controladores/controladorEmpleados');
+const controladorAuth = require('../controladores/controladorAutenticacion');
 const { body, query } = require('express-validator'); 
 const router = Router();
 router.get('/', controladorEmpleados.inicio);
-router.get('/listar/', controladorEmpleados.listarEmpleados);
+router.get('/listar/', controladorAuth.ValidarAutenticado, controladorEmpleados.listarEmpleados);
 router.post('/guardar/',
 body('IdEmpleado').isInt().withMessage('Debe enviar valores enteros, para el id del empleado'), 
 body('Nombre').isLength({min: 3}).withMessage('El nombre del empleado debe tener 3 o mas caracteres'),  

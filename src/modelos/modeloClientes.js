@@ -15,11 +15,11 @@ const Cliente = db.define("cliente",
         allowNull: false,
     },
     Correo:{
-        type: sequelize.STRING(250),
+        type: sequelize.STRING(60),
         allowNull: false,
     },
     Contrasena:{
-        type: sequelize.STRING(250),
+        type: sequelize.STRING(1000),
         allowNull: false,
     },
     FechaCreacion:{
@@ -27,10 +27,14 @@ const Cliente = db.define("cliente",
         allowNull: true,
     },
     Estado:{
-        type: sequelize.TINYINT(1),
+        type: sequelize.TINYINT,
         allowNull: true,
         defaultValue: true,
     },
+    pin:{
+        type: sequelize.STRING(4),
+        allowNull: true,
+    }
 },
 {
     tableName: "usuarioscliente",
