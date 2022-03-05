@@ -4,7 +4,7 @@ const router = Router();
 
 router.get('/', controladorProductos.inicio);
 router.get('/listarproductos', controladorProductos.listarproductos);
-router.post('/guardarproductos', controladorProductos.guardarproductos);
+router.post('/guardarproductos', controladorProductos.guardar);
 router.put('/modificarproductos', controladorProductos.modificarProductos);
 router.delete('/eliminarproductos', controladorProductos.eliminarproducto);
 

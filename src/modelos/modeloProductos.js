@@ -15,7 +15,7 @@ const Producto = db.define("producto",
         allowNull: false,
     },
     DescripcionProducto:{
-        type: sequelize.STRING(250),
+        type: sequelize.STRING(100),
         allowNull: true,
     },
    ISV:{
@@ -30,7 +30,7 @@ const Producto = db.define("producto",
     Imagen:{
         type: sequelize.STRING(250),
         allowNull: true,
-    }
+    },
 },
 {
     tableName: "productos",
