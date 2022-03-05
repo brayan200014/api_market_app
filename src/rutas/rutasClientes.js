@@ -5,8 +5,8 @@ const{body,query}=require('express-validator');
 const router = Router();
 
 router.get('/', controladorClientes.inicio);
-router.get('/listarcliente',controladorAutenticacion.ValidarAutenticado, controladorClientes.listarCliente);
-router.get('/buscarcliente', controladorClientes.buscarCliente);
+router.get('/listar', controladorClientes.listar);
+router.get('/buscar', controladorClientes.buscar);
 
 router.post('/guardar',
 body('IdUsuarioCliente').isInt().withMessage('Debe enviar valores enteros'), 
@@ -14,6 +14,8 @@ body('NombreUsuario').isLength({min: 3}).withMessage('Debe tener 3 o mas caracte
 body('Correo').isEmail().withMessage('Debe ingresar un correo electronico valido'),
 controladorClientes.guardar);
 
-router.delete('/eliminarcliente', controladorClientes.eliminarCliente);
+router.put('/modificarCorreo', controladorClientes.modificarCorreo);
+router.put('/modificarEstado', controladorClientes.modificarEstado);
+router.delete('/eliminar', controladorClientes.eliminar);
 
 module.exports=router;

@@ -18,42 +18,36 @@ exports.inicio = (req,res) => {
     }
  };
 
- exports.guardarproductos = async (req, res) => {
-    const {categoriaid, nombre} = req.body;
-
-        if(!categoriaid || !nombre )
+ exports.guardar = async (req,res) => {
+        const {IdProducto, NombreProducto, Categorias_IdCategoria} = req.body;
+        if(!IdProducto || !NombreProducto || !Categorias_IdCategoria)
         {
             res.send("Debe enviar los datos completos");
         }
-        else{
-
-            const buscarCategoria = await ModeloCategoria.findOne({
-                where:{
-                    id : categoriaid,
-                }
+        else
+        {
+            await ModeloProductos.create({
+                IdProducto,
+                NombreProducto,
+                Categorias_IdCategoria
+            })
+            .then((data) => 
+            {
+                console.log(data);
+                res.send("Registro Listo");     
+            })
+            .catch((error) =>
+            {
+                console.log(error);
+                res.send("Error al guardar");    
             });
-            if(!buscarCategoria){
-                res.send("El id de la persona no existe/inactivo");
-            }
-            else{
-                    await ModeloProductos.create({
-                    categoriaid: categoriaid,
-                    nombre: nombre,        
-                }).then((data) => {
-                    console.log(data);
-                    res.send("Registro almacenado correctamente");
-                }).catch((error) => {
-                    console.log(error);
-                    res.send("Error al guardar datos");
-                });
-            }
-        }
+    }    
  };
 
  exports.modificarProductos = async (req,res) => {
-    const {id} = req.query; 
-    const {nombre} = req.body;
-    if(!id)
+    const {IdProducto} = req.query; 
+    const {NombreProducto} = req.body;
+    if(!IdProducto)
     {
         res.send("Debe enviar el id del Producto");
     }
@@ -61,7 +55,7 @@ exports.inicio = (req,res) => {
     var buscarproducto = await ModeloProductos.findOne(
         {
             where: {
-                id: id,
+                IdProducto: IdProducto,
             }
         }
     );
@@ -72,8 +66,8 @@ exports.inicio = (req,res) => {
     else
     {
             //va a guardar los datos
-                buscarproducto.nombre = nombre;
-                await buscarUsuario 
+                buscarproducto.NombreProducto = NombreProducto;
+                await buscarproducto 
                 .save().then((data) => {
                 console.log(data);
                 res.send("Registro actualizado correctamente");
@@ -85,41 +79,31 @@ exports.inicio = (req,res) => {
  };
 
  exports.eliminarproducto = async (req,res) => {
-  
-    const {id} = req.query; 
-
-    if(!id)
+    const {IdProducto} = req.query; 
+    if(!IdProducto)
     {
-        res.send("Debe enviar el id de la persona");
+        res.send("Debe enviar el id del producto");
     }
     else
     {
-        var buscarproducto = await ModeloProductos.findOne(
+        await ModeloProductos.destroy({
+            where:
             {
-                where: {
-                    id: id,
-                }
+                IdProducto: IdProducto,
             }
-        );
+        })
+        .then((data) => {
+            if (data==0) {
+                res.send("El producto no existe");
+            } else {
+                console.log(data);
+                res.send("Registro eliminado con exito");
+            }
+        })   
+        .catch((error) => {
+            console.log(error);
+            res.send("Error al eliminar los datos del producto");
 
-        if(!buscarproducto)
-        {
-            res.send("El Usuario no existe");
-        }
-        else
-        {
-                    await ModeloProductos.destroy({
-                        where:
-                        {
-                            id: id,
-                        }
-                    }).then((data) => {
-                    console.log(data);
-                    res.send("Registro eliminado correctamente");}).catch((error) => 
-                    {
-                    console.log(error);
-                    res.send("Error borrar datos");
-                });
-        }
+        });
     }
  };
