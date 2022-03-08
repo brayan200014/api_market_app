@@ -2,7 +2,7 @@ const sequelize= require('sequelize');
 const db= new sequelize (
     'basemovil',
     'root',
-    'Semeolvido14',
+    'fa.quinto5',
     {
         host: 'localhost',
         dialect: 'mysql',
