@@ -2,7 +2,7 @@ const fs= require('fs');
 const path= require('path');
 const internal= require('stream');
 const msj=require('../componentes/mensaje');
-//const modeloProducto= require('../modelos/modeloProducto');
+const modeloProducto= require('../modelos/modeloProductos');
 const modeloVentas= require('../modelos/modeloVentas');
 
 exports.RecibirImagenProducto= async (req,res) => {
@@ -10,9 +10,9 @@ exports.RecibirImagenProducto= async (req,res) => {
 
     const {id}= req.query; 
 
-    var buscarProducto= await modeloVentas.findOne({
+    var buscarProducto= await modeloProducto.findOne({
         where: {
-            IdVenta: id
+            IdProducto: id
         }
     });
 
@@ -38,7 +38,7 @@ exports.RecibirImagenProducto= async (req,res) => {
             }
         }
 
-        buscarProducto.imagen= filename;
+        buscarProducto.Imagen= filename;
         await buscarProducto.save().then((data) => {
             msj("Imagen Actualizada", 200, [], res);
             console.log("Imagen Actualizada");
@@ -54,9 +54,9 @@ exports.consultarImagenProducto= async (req,res) =>{
     const {id}= req.query;
 
 
-    var buscarImagen= await modeloVentas.findOne({
+    var buscarImagen= await modeloProducto.findOne({
         where: {
-            IdVenta: id
+            IdProducto: id
         }
     });
 
