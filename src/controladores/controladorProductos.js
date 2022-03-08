@@ -1,5 +1,6 @@
 const ModeloProductos= require('../modelos/modeloProductos');
 const ModeloCategoria= require('../modelos/modeloCategorias');
+const msj= require('../componentes/mensaje');
 
 exports.inicio = (req,res) => {
     res.send("Esto es inicio en modulo Productos");
@@ -17,6 +18,30 @@ exports.inicio = (req,res) => {
         res.json(listarproductos);
     }
  };
+
+ exports.listarProducto= async (req,res) => {
+     const {id}= req.query; 
+
+     if(!id) {
+         msj("Envie un id de producto", 200, [], res);
+     }
+     else 
+     {
+        const buscarId=await ModeloProductos.findOne({
+            where: {
+                IdProducto:id
+            }
+        });
+
+        if(!buscarId) {
+            msj("El id del producto enviado no existe", 200, [], res);
+        }
+        else 
+        {
+            msj("Consulta exitosa", 200, buscarId, res);
+        }
+     }
+ }
 
  exports.guardar = async (req,res) => {
         const {IdProducto, NombreProducto, Categorias_IdCategoria} = req.body;
