@@ -21,7 +21,7 @@ exports.RecibirImagenProducto= async (req,res) => {
     }
     else {
 
-        const buscarImagen= fs.existsSync(path.join(__dirname,'../public/img/'+buscarProducto.imagen));
+        const buscarImagen= fs.existsSync(path.join(__dirname,'../public/img/'+buscarProducto.Imagen));
 
         if(!buscarImagen) {
             console.log("La imagen no existe en el fichero");
@@ -29,7 +29,7 @@ exports.RecibirImagenProducto= async (req,res) => {
         else 
         {
             try{
-                fs.unlinkSync(path.join(__dirname, '../public/img/'+buscarProducto.imagen));
+                fs.unlinkSync(path.join(__dirname, '../public/img/'+buscarProducto.Imagen));
                 console.log("Imagen Actualizada");
             }
             catch(error) {
@@ -65,14 +65,14 @@ exports.consultarImagenProducto= async (req,res) =>{
     }
     else 
     {
-        const imagen= fs.existsSync(path.join(__dirname, '../public/img/'+ buscarImagen.imagen));
+        const imagen= fs.existsSync(path.join(__dirname, '../public/img/'+ buscarImagen.Imagen));
 
         if(!imagen) {
             msj("Imagen no existe", 200, [], res);
         }
         else 
         {
-                 res.sendFile(path.join(__dirname, '../public/img/'+ buscarImagen.imagen))
+                 res.sendFile(path.join(__dirname, '../public/img/'+ buscarImagen.Imagen))
         }
     }
 }
