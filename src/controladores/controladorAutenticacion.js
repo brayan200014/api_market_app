@@ -11,7 +11,8 @@ exports.recuperarContrasena = async (req, res) =>{
 
     if(!validacion.isEmpty()){
         console.log("Hola");
-        res.json(validacion.array());
+        msj("Los Datos Proporcionados no son validos", 500, validacion.array(), res);
+
     }
     else{
         const { correo } = req.body;
@@ -32,13 +33,16 @@ exports.recuperarContrasena = async (req, res) =>{
             await buscarUsuario.save().then((data)=>{
                 if(enviarCorreo.recuperarContrasena(dataRecuperacion)){
                 console.log(data);
-                res.send("Correo Enviado");
+                msj("Correo Enviado", 200, [], res);
             }
             else{ 
-                res.send("Error al enviar el correo");
+                msj("Error al enviar el Correo", 500, [], res);
             }  
 
             });
+        }
+        else{
+            msj("No existe el correo especificado", 500, [], res);
         }
     }
 };
@@ -50,7 +54,7 @@ exports.cambiarContra = async (req, res) => {
 
     if(!validacion.isEmpty()){
         console.log(validacion.array());
-        res.json(validacion.array());
+        msj("Los Datos Proporcionados no son validos", 500, validacion.array(), res);
     }else{
             let findByID = await ModeloUsuario.findOne({
                 where:{
@@ -59,7 +63,7 @@ exports.cambiarContra = async (req, res) => {
                 }
             });
             if(!findByID){
-                res.send("No se encontro ningun usuario con correo = ["+ Correo +"] y pin de verificación ["+ pin +"] en [usuarioscliente].");
+               msj("No se encontro ningun usuario con correo = ["+ Correo +"] y pin de verificación ["+ pin +"] en [usuarioscliente].", 500, [], res);
             }else{
 
                     findByID.Contrasena = contraseniaNueva;
@@ -69,11 +73,11 @@ exports.cambiarContra = async (req, res) => {
 
                     await findByID.save().then((data) => {
                         console.log(data);
-                        res.send("ACTUALIZACION DE PASSWORD COMPLETADA CON ÉXITO!");          
+                        msj("ACTUALIZACION DE PASSWORD COMPLETADA CON ÉXITO!", 200, [], res);          
                         
                     }).catch((error)=>{
                         console.log(error);
-                        res.send("NO fue posible actualizar la información");     
+                        msj("NO fue posible actualizar la información", 200, [], res);     
                     });
                 
                 }

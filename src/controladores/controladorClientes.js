@@ -1,5 +1,6 @@
 const modeloCliente = require("../modelos/modeloClientes");
 const { validationResult } = require('express-validator');
+const msj = require('../componentes/mensaje');
 
 exports.inicio = (req,res) => {
     res.send("Esto es inicio en modulo Cliente");
@@ -20,14 +21,14 @@ exports.inicio = (req,res) => {
 
  exports.buscar= async (req,res) => {
 
-    const { id } =req.query;
-    if(!id){
+    const { Correo } =req.query;
+    if(!Correo){
         res.send("No enviar Id vacio");
     }
     else{
         const buscarCliente = await modeloCliente.findOne({
             where:{
-                IdUsuarioCliente:id
+                Correo: Correo
             }
         });
     
@@ -46,34 +47,44 @@ exports.inicio = (req,res) => {
     const validacion = validationResult(req);
     if(!validacion.isEmpty())
     {
-        res.json(validacion.array());
+        msj("Los Datos Proporcionados no son validos", 500, validacion.array(), res);
     }
     else
     {
-        const {IdUsuarioCliente, NombreUsuario, Correo, Contrasena, Estado} = req.body;
-        if(!IdUsuarioCliente || !NombreUsuario || !Correo || !Contrasena || !Estado)
+        const {NombreUsuario, Correo, Contrasena} = req.body;
+        if(!NombreUsuario || !Correo || !Contrasena)
         {
             res.send("Debe enviar los datos completos");
         }
         else
         {
+            const buscarCliente = await modeloCliente.findOne({
+            where:{
+                NombreUsuario: NombreUsuario,
+            }
+        });
+        if(!buscarCliente){
+
             await modeloCliente.create({
-                IdUsuarioCliente,
                 NombreUsuario,
                 Correo,
-                Contrasena, 
-                Estado,
+                Contrasena,
+                FechaCreacion:Date.now() 
             })
             .then((data) => 
             {
                 console.log(data);
-                res.send("Registro Listo");     
+                msj("Usuario Registrado", 200, [], res);     
             })
             .catch((error) =>
             {
                 console.log(error);
-                res.send("Error al guardar");    
+                msj("Error al crear el Usuario", 500, [], res);    
             });
+        }
+        else{
+            msj("Lo sentimos, ese usuario ya existe", 500, [], res);
+        }
         }    
     }
  };
