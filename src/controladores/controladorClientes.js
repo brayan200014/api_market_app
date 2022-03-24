@@ -5,6 +5,8 @@ exports.inicio = (req,res) => {
     res.send("Esto es inicio en modulo Cliente");
  };
 
+
+ 
  exports.listar= async (req,res) => {
 
     const listaCliente = await modeloCliente.findAll();
@@ -20,14 +22,14 @@ exports.inicio = (req,res) => {
 
  exports.buscar= async (req,res) => {
 
-    const { id } =req.query;
-    if(!id){
+    const { Correo } =req.body;
+    if(!Correo){
         res.send("No enviar Id vacio");
     }
     else{
         const buscarCliente = await modeloCliente.findOne({
             where:{
-                IdUsuarioCliente:id
+                Correo:Correo
             }
         });
     
@@ -79,20 +81,23 @@ exports.inicio = (req,res) => {
  };
  
  exports.modificarCorreo = async(req, res) =>{
-    const{id}=req.query;
     const{Correo}=req.body;
-    if(!id || !Correo){
+    const{NombreUsuario}=req.body;
+    const{Estado}=req.body;
+    if(!Correo){
         res.send("Envie los datos completos");
     }else{
         var buscarCliente = await modeloCliente.findOne({
             where:{
-                IdUsuarioCliente:id
+                Correo:Correo
             }
         });
         if(!buscarCliente){
-            res.send("El Id no existe");
+            res.send("El correo no existe");
         }else{
             buscarCliente.Correo=Correo;
+            buscarCliente.NombreUsuario=NombreUsuario;
+            buscarCliente.Estado=Estado;
             await buscarCliente.save()
             .then((data) => {
                 console.log(data);

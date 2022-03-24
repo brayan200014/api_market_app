@@ -9,6 +9,7 @@ const msj = require('../componentes/mensaje');
 exports.recuperarContrasena = async (req, res) =>{
     const validacion = validationResult(req);
 
+    
     if(!validacion.isEmpty()){
         console.log("Hola");
         res.json(validacion.array());
