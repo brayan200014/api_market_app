@@ -45,6 +45,30 @@ exports.inicio = (req,res) => {
     }
  };
 
+ exports.buscarCorreo= async (req,res) => {
+
+    const { Correo } =req.body;
+    if(!Correo){
+        res.send("No enviar Id vacio");
+    }
+    else{
+        const buscarCliente = await modeloCliente.findOne({
+            where:{
+                Correo:Correo
+            }
+        });
+    
+        //validacion
+        if(!buscarCliente)
+        {
+            res.send("No se encontraron registros");
+        }
+        else{
+            res.json(buscarCliente);
+        }
+    }
+ };
+
  exports.guardar = async (req,res) => {
     const validacion = validationResult(req);
     if(!validacion.isEmpty())

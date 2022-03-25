@@ -6,7 +6,8 @@ const router = Router();
 
 router.get('/', controladorClientes.inicio);
 router.get('/listar', controladorClientes.listar);
-router.post('/buscar', controladorClientes.buscar);
+router.get('/buscar', controladorClientes.buscar);
+router.post('/buscarCorreo', controladorClientes.buscarCorreo);
 
 router.post('/guardar',
 body('NombreUsuario').isLength({min: 3}).withMessage('Debe tener 3 o mas caracteres'),  
