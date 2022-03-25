@@ -130,7 +130,7 @@ exports.inicio = (req,res) => {
         if(!buscarCliente){
             res.send("El correo no existe");
         }else{
-            buscarCliente.Correo=Correo;
+            //buscarCliente.Correo=Correo;
             buscarCliente.NombreUsuario=NombreUsuario;
             buscarCliente.Estado=Estado;
             await buscarCliente.save()
