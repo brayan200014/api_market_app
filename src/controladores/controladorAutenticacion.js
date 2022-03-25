@@ -9,6 +9,7 @@ const msj = require('../componentes/mensaje');
 exports.recuperarContrasena = async (req, res) =>{
     const validacion = validationResult(req);
 
+    
     if(!validacion.isEmpty()){
         console.log("Hola");
         msj("Los Datos Proporcionados no son validos", 500, validacion.array(), res);
