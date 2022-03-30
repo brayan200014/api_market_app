@@ -79,3 +79,23 @@ exports.consultarImagenProducto= async (req,res) =>{
 
 
 
+exports.recibirImagen= async (req, res) => {
+    msj("Imagen almacenada", 200, [], res);
+        
+}
+
+
+exports.consultarImagenPublic= async (req,res) =>{
+       const {nombre}= req.query;
+    
+        const imagen= fs.existsSync(path.join(__dirname, '../public/img/'+nombre));
+
+        if(!imagen) {
+            msj("Imagen no existe", 200, [], res);
+        }
+        else 
+        {
+                 res.sendFile(path.join(__dirname, '../public/img/'+nombre))
+        }
+    
+}
