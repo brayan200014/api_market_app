@@ -10,6 +10,32 @@ const modeloProducto= require('../modelos/modeloProductos');
 //let IdVentaRecibido=0;
 
 
+exports.listarDetalle= async (req,res)=>{
+    const validacion= validationResult(req);
+
+    if(!validacion.isEmpty()) {
+        msj("Id sin formato valido", 200, validacion.array(), res)
+    }
+    else 
+    {
+        const { id }= req.query;
+
+        const buscarDetalle= await modeloDetalleVenta.findAll({
+            where: {
+                Ventas_IdVenta: id
+            }
+        });
+
+        if(!buscarDetalle) {
+            msj("Numero de factura incorrecto",200, [], res);
+        }
+        else {
+            msj("Datos detalle", 200, buscarDetalle,res);
+        }
+    }
+
+}
+
 exports.guardarDetalle= async(req,res) => {
     const validacion= validationResult(req);
 

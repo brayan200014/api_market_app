@@ -5,6 +5,9 @@ const modeloDetalleVenta= require('../modelos/modeloDetalleVenta');
 //const modeloProducto= require('')
 const controladorDetalleVenta= require('../controladores/controladorDetalleVenta');
 //var Venta_IdVenta=0;
+const sequelize= require('sequelize');
+const { QueryTypes }= require('@sequelize/core')
+const db= require('../configuraciones/db');
 
 const modeloUsuarioCliente= require('../modelos/modeloClientes'); 
 const modeloSucursal= require('../modelos/modeloSucursales');
@@ -20,6 +23,17 @@ exports.listar= async (req,res) => {
         msj("Datos Ventas", 200, listarVentas, res); 
     }
 }
+
+exports.listarJoinVentas= async (req,res)=> {
+    const ventas= await db.query('SELECT * FROM ListaVentasJoin;', { type: QueryTypes.SELECT});
+    
+    if(ventas.length==0) {
+        msj("No hay ventas en los registros",200,[], res);
+    }
+    else {
+        msj("Datos Ventas", 200, ventas, res); 
+    }
+} 
 
 exports.listarVenta= async (req,res) => {
     const validacion= validationResult(req); 
