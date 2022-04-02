@@ -21,7 +21,7 @@ body('Precio').isFloat().withMessage("El valor debe ser un numero"),
 body('IdProducto').isInt().withMessage("Debe ser un numero entero el IdProducto"),
 controladorDetalleVenta.guardarDetalle);
 
-router.put('/modificar',query('id').isInt().withMessage("Envie un numero entero"), body('FechaVenta').isDate().withMessage("El formato de fecha es invalido"),
+router.put('/modificar',query('id').isInt().withMessage("Envie un numero entero"),
 body('Subtotal').isFloat().withMessage("El valor debe ser un numero"),
 body('ISV').isFloat().withMessage("El valor debe ser un numero"),
 body('IdUsuarioCliente').isInt().withMessage("El id del cliente debe ser un entero"),

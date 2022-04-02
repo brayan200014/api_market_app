@@ -27,7 +27,7 @@ exports.listar= async (req,res) => {
 exports.listarJoinVentas= async (req,res)=> {
     const ventas= await db.query('SELECT * FROM ListaVentasJoin;', { type: QueryTypes.SELECT});
     
-    if(ventas.length==0) {
+    if(!ventas) {
         msj("No hay ventas en los registros",200,[], res);
     }
     else {
@@ -141,9 +141,9 @@ exports.modificar= async (req,res)=>{
     }
     else {
         const {id}= req.query;
-        const {FechaVenta, Subtotal, ISV, IdUsuarioCliente,IdSucursal}= req.body;
+        const {Subtotal, ISV, IdUsuarioCliente,IdSucursal}= req.body;
 
-        if(!FechaVenta || !Subtotal || !ISV || !IdUsuarioCliente || !IdSucursal) {
+        if( !Subtotal || !ISV || !IdUsuarioCliente || !IdSucursal) {
             msj("Hay datos vacios al enviar los datos", 200, [], res); 
         }
         else 
@@ -185,7 +185,7 @@ exports.modificar= async (req,res)=>{
             }
             else 
             {
-                buscarVenta.FechaVenta= FechaVenta; 
+                buscarVenta.FechaVenta= buscarVenta.FechaVenta; 
                 buscarVenta.Subtotal= Subtotal; 
                 buscarVenta.ISV= ISV;
                 buscarVenta.IdUsuarioCliente= buscarIdCliente.IdUsuarioCliente; 
