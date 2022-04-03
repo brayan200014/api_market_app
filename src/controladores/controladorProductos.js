@@ -15,7 +15,7 @@ exports.inicio = (req,res) => {
         res.send("No existen datos");
     }
     else{
-        res.json(listarproductos);
+        msj("Productos",200,listarproductos, res);
     }
  };
 
@@ -44,22 +44,24 @@ exports.inicio = (req,res) => {
  }
 
  exports.guardar = async (req,res) => {
-        const {IdProducto, NombreProducto, Categorias_IdCategoria} = req.body;
-        if(!IdProducto || !NombreProducto || !Categorias_IdCategoria)
+        const {NombreProducto, DescripcionProducto, ISV,Estado,Categorias_IdCategoria} = req.body;
+        if(!NombreProducto || !DescripcionProducto || !ISV || !Estado || !Categorias_IdCategoria)
         {
             res.send("Debe enviar los datos completos");
         }
         else
         {
             await ModeloProductos.create({
-                IdProducto,
-                NombreProducto,
-                Categorias_IdCategoria
+                NombreProducto: NombreProducto,
+                DescripcionProducto: DescripcionProducto,
+                ISV: ISV,
+                Estado: Estado,
+                Categorias_IdCategoria: Categorias_IdCategoria,
             })
             .then((data) => 
             {
                 console.log(data);
-                res.send("Registro Listo");     
+                msj("Producto almacenado",200, data, res)     
             })
             .catch((error) =>
             {
@@ -71,7 +73,7 @@ exports.inicio = (req,res) => {
 
  exports.modificarProductos = async (req,res) => {
     const {IdProducto} = req.query; 
-    const {NombreProducto} = req.body;
+    const {NombreProducto, DescripcionProducto, ISV,Imagen,Estado,Categorias_IdCategoria} = req.body;
     if(!IdProducto)
     {
         res.send("Debe enviar el id del Producto");
@@ -92,13 +94,18 @@ exports.inicio = (req,res) => {
     {
             //va a guardar los datos
                 buscarproducto.NombreProducto = NombreProducto;
-                await buscarproducto 
-                .save().then((data) => {
+                buscarproducto.DescripcionProducto= DescripcionProducto;
+                buscarproducto.ISV= ISV;
+                buscarproducto.Imagen= Imagen;
+                buscarproducto.Estado= Estado;
+                buscarproducto.Categorias_IdCategoria= Categorias_IdCategoria;
+                await buscarproducto.save()
+                .then((data) => {
                 console.log(data);
-                res.send("Registro actualizado correctamente");
+                msj("Producto Actualizado",200, data, res);
             }).catch((error) => {
                 console.log(error);
-                res.send("Error al actualizar datos");
+                msj("Error al actualizar producto",200,error,res);
             });
     }
  };
@@ -107,28 +114,21 @@ exports.inicio = (req,res) => {
     const {IdProducto} = req.query; 
     if(!IdProducto)
     {
-        res.send("Debe enviar el id del producto");
+        msj("El id no contiene ningun dato",200, [], res);
     }
     else
     {
-        await ModeloProductos.destroy({
+        const buscarproducto=await ModeloProductos.destroy({
             where:
             {
                 IdProducto: IdProducto,
             }
         })
-        .then((data) => {
-            if (data==0) {
-                res.send("El producto no existe");
-            } else {
-                console.log(data);
-                res.send("Registro eliminado con exito");
-            }
-        })   
-        .catch((error) => {
-            console.log(error);
-            res.send("Error al eliminar los datos del producto");
-
-        });
+        
+        if(!buscarproducto){
+            msj("El ID del producto no existe", 200, [], res);
+        }else{
+            msj("Producto eliminado", 200, [], res);
+        }
     }
  };

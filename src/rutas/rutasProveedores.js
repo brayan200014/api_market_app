@@ -11,9 +11,8 @@ body('Contacto').isString().withMessage("El formato de Contacto es invalido."),
 body('Email').isEmail().withMessage("El formato de Correo es invalido."),
 controladorProveedores.proveedorGuardar);
 
-router.put('/actualizar', query('IdProveedor').isInt().withMessage("Debe de enviar un numero entero."),
+router.put('/actualizar',
 body('NombreProveedor').isString().withMessage("El formato de Nombre es invalido"),
-body('Contacto').isString().withMessage("El formato de Contacto es invalido."),
 body('Email').isEmail().withMessage("El formato de Correo es invalido."),
 controladorProveedores.proveedorActualizar);
 

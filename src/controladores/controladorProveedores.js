@@ -1,5 +1,5 @@
 const modeloProveedor = require('../modelos/modeloProveedores');
-const mensaje = require('../componentes/mensaje');
+const msj = require('../componentes/mensaje');
 const { validationResult } = require('express-validator');
 
 exports.Inicio = (req, res)=>{
@@ -8,10 +8,10 @@ exports.Inicio = (req, res)=>{
 exports.proveedorListar = async(req, res)=>{
     const listaProveedores = await modeloProveedor.findAll();
     if(listaProveedores.length == 0){
-        res.send("No existe ningun proveedor.");
+        msj("No hay proveedores",200,[], res);
     }
     else{
-        res.json(listaProveedores);
+        msj("Proveedores",200, listaProveedores, res);
     }
 };
 exports.proveedorGuardar = async (req, res)=>{
@@ -23,10 +23,10 @@ exports.proveedorGuardar = async (req, res)=>{
     else{
         const { NombreProveedor, Contacto, Email } = req.body;
         if(!NombreProveedor){
-            mensaje("Debe de Ingresar el Nombre del Proveedor.", 200, [], res);
+            msj("Debe de Ingresar el Nombre del Proveedor.", 200, [], res);
         }
         else if(!Contacto){
-            mensaje("Debe de Ingresar el Contacto del Proveedor.", 200 , [], res);
+            msj("Debe de Ingresar el Contacto del Proveedor.", 200 , [], res);
         }
         else{
             await modeloProveedor.create({
@@ -47,17 +47,12 @@ exports.proveedorGuardar = async (req, res)=>{
     
 };
 exports.proveedorActualizar = async (req, res)=>{
-    const validar = validationResult(req);
 
-    if(!validar.isEmpty()){
-        res.json(validar.array());
-    }
-    else{
-        const { IdProveedor } = req.query;
-        const { NombreProveedor, Contacto, Email } = req.body;
+    const { IdProveedor } = req.query;
+    const { NombreProveedor, Contacto, Email } = req.body;
 
-        if(!IdProveedor || !NombreProveedor || !Contacto){
-            mensaje("Verifique y Complete los datos.",200,[],res);
+        if(!NombreProveedor || !Contacto || !Email) {
+            msj("Verifique y Complete los datos.",200,[],res);
         }
         else{
             var buscarProveedor = await modeloProveedor.findOne({
@@ -66,7 +61,7 @@ exports.proveedorActualizar = async (req, res)=>{
                 }   
             });
             if(!buscarProveedor){
-                mensaje("El Id del Proveedor que desea actualizar NO existe.",200,[], res);
+                msj("El Id del Proveedor que desea actualizar NO existe.",200,[], res);
             }
             else{
                 buscarProveedor.NombreProveedor = NombreProveedor;
@@ -75,15 +70,14 @@ exports.proveedorActualizar = async (req, res)=>{
                 await buscarProveedor.save()
                 .then((data)=>{
                     console.log(data);
-                    mensaje("Registro del Proveedor Actualizado.", 200, data, res);
+                    msj("Registro del Proveedor Actualizado.", 200, data, res);
                 })
                 .catch((error)=>{
                     console.log(error);
-                    mensaje("Error al Actualizar el proveedor", 200, error, res);
+                    msj("Error al Actualizar el proveedor", 200, error, res);
                 });
             }
         }
-    }
 };
 exports.proveedorEliminar = async (req, res)=>{
 
@@ -95,7 +89,7 @@ exports.proveedorEliminar = async (req, res)=>{
     else{
         const { IdProveedor } = req.query;
         if(!IdProveedor){
-            mensaje("Envie el ID del Proveedor a Eliminar.", 200, [], res);
+            msj("Envie el ID del Proveedor a Eliminar.", 200, [], res);
         }
         else{
             var buscarProveedor = await modeloProveedor.findOne({
@@ -104,7 +98,7 @@ exports.proveedorEliminar = async (req, res)=>{
                 }
             });
             if(!buscarProveedor){
-                mensaje("El ID que envio NO existe.", 200, [], res);
+                msj("El ID que envio NO existe.", 200, [], res);
             }
             else{
                 await modeloProveedor.destroy({
@@ -114,11 +108,11 @@ exports.proveedorEliminar = async (req, res)=>{
                 })
                 .then((data)=>{
                     console.log(data);
-                    mensaje("Registro eliminado.", 200, data, res);
+                    msj("Registro eliminado.", 200, data, res);
                 })
                 .catch((error)=>{
                     console.log(error);
-                    mensaje("Error al Eliminar el Proveedor.", 200, error, res);
+                    msj("Error al Eliminar el Proveedor.", 200, error, res);
                 });
             }
         }
@@ -134,7 +128,7 @@ exports.listarUnProveedor = async(req, res) =>{
         const { IdProveedor } = req.query;
 
         if(!IdProveedor){
-            mensaje("El ID no contiene ningun dato.", 200, [], res);
+            msj("El ID no contiene ningun dato.", 200, [], res);
         }
         else{
             const buscarProveedor = await modeloProveedor.findOne({
@@ -144,10 +138,10 @@ exports.listarUnProveedor = async(req, res) =>{
             });
 
             if(!buscarProveedor){
-                mensaje("El ID de proveedor ingresado NO existe.", 200, [], res);
+                msj("El ID de proveedor ingresado NO existe.", 200, [], res);
             }
             else{
-                mensaje("Datos", 200, buscarProveedor, res);
+                msj("Datos", 200, buscarProveedor, res);
             }
         }
     }
