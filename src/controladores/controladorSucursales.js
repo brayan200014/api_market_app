@@ -4,6 +4,7 @@ const ModeloCiudad = require('../modelos/modeloCiudades');
 const db = require('../configuraciones/db');
 const {QueryTypes} = require('sequelize');
 const {validationResult} = require('express-validator');
+const mensaje = require('../componentes/mensaje');
 
 exports.inicio = (req, res) =>{
     res.send("Usted se encuentra en Modulo Sucursales...Bienvenido");
@@ -11,13 +12,28 @@ exports.inicio = (req, res) =>{
 
 //LISTAR REGISTRO SUCURSALES
 exports.listarSucursales = async (req, res) => {
-    const listarSucursales = await db.query("select * from vistasucursales",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
+    const listarSucursales = await db.query("Select * from VistaSucursales",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
     if(listarSucursales.length==0){
         res.send("Lo sentimos mucho pero...No existen datos");
+        //mensaje("Lo sentimos mucho pero...No existen datos", 500, [], res);
 
     }
     else{
         res.json(listarSucursales);
+        //mensaje("Datos Sucursales", 200,listarSucursales, res);
+    }
+};
+
+exports.listarSucursal = async (req, res) => {
+    const listarSucursal = await db.query("Select * from VistaSucursales",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
+    if(listarSucursal.length==0){
+        //res.send("Lo sentimos mucho pero...No existen datos");
+        mensaje("Lo sentimos mucho pero...No existen datos", 500, [], res);
+
+    }
+    else{
+        //res.json(listarSucursales);
+        mensaje("Datos Sucursales", 200,listarSucursal, res);
     }
 };
 

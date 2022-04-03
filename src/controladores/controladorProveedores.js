@@ -9,7 +9,7 @@ exports.proveedorListar = async(req, res)=>{
     const listaProveedores = await modeloProveedor.findAll();
     if(listaProveedores.length == 0){
         res.send("No existe ningun proveedor.");
-    }
+    } 
     else{
         res.json(listaProveedores);
     }

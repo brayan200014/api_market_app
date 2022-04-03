@@ -4,6 +4,7 @@ const ModeloSucursales = require('../modelos/modeloSucursales');
 const db = require('../configuraciones/db');
 const {QueryTypes} = require('sequelize');
 const {validationResult} = require('express-validator');
+const mensaje = require('../componentes/mensaje');
 
 exports.inicio = (req, res) =>{
     res.send("Usted se encuentra en Modulo Empleados...Bienvenido");
@@ -15,11 +16,11 @@ exports.listarEmpleados = async (req, res) => {
     //const listarEmpleados = await ModeloEmpleados.findAll();
     const listarEmpleados = await db.query("select * from vistaempleados",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
     if(listarEmpleados.length==0){
-        res.send("Lo sentimos mucho pero...No existen datos");
+        mensaje("Lo sentimos mucho pero...No existen datos", 200, [], res);
 
     }
     else{
-        res.json(listarEmpleados);
+        mensaje("Datos Empleados", 200,listarEmpleados, res);
     }
 };
 
@@ -33,7 +34,7 @@ exports.guardarEmpleados = async (req, res) => {
     else{
         const {Nombre, Apellido, Telefono, Direccion, Email, FechaContratacion, Estado, Sucursales_IdSucursal, Puestos_IdPuesto} = req.body;
     if(!Nombre || !Apellido ||!Telefono ||!Email ||!Sucursales_IdSucursal ||!Puestos_IdPuesto){
-        res.send("Debe enviar los datos completos");
+        mensaje("Debe enviar los datos completos", 500, [], res);
     }
     else{
             const buscarempleados = await ModeloEmpleados.findOne({
@@ -48,7 +49,7 @@ exports.guardarEmpleados = async (req, res) => {
                     }
                 });
                 if (!buscarsucursal) {
-                    res.send("La sucursal no existe");
+                    mensaje("La sucursal no existe", 500, [], res);
                 } else {
                     await ModeloEmpleados.create({
                         Nombre,
@@ -56,24 +57,24 @@ exports.guardarEmpleados = async (req, res) => {
                         Telefono,
                         Direccion,
                         Email, 
-                        FechaContratacion, 
+                        FechaContratacion:Date.now(), 
                         Estado,
                         Sucursales_IdSucursal,
-                        Puestos_IdPuesto, 
+                        Puestos_IdPuesto,
                     })
                     .then((data) => {
                         console.log(data);
-                        res.send("Registro de Empleado Guardado Exitosamente");
+                        mensaje("Registro de Empleado Guardado Exitosamente", 200, [], res);
                         
                     })
                     .catch((error) => {
                         console.log(error);
-                        res.send("Error al guardar el registro de empleado");    
+                        mensaje("Error al guardar el registro de empleado", 500, [], res);   
                     });
                 }    
             }
             else{
-                res.send("El email del empleado no existe o esta inactivo");
+                mensaje("El email del empleado no existe o esta inactivo", 500, [], res);
             }
         }
     }
@@ -85,7 +86,7 @@ exports.guardarEmpleados = async (req, res) => {
 exports.eliminarEmpleados = async (req, res) => {
     const {IdEmpleado} = req.query;
     if(!IdEmpleado){
-        res.send("Envie el ID del empleado");
+        mensaje("El ID del Empleado no existe", 500, [], res);
     }
     else{
             await ModeloEmpleados.destroy({
@@ -96,15 +97,15 @@ exports.eliminarEmpleados = async (req, res) => {
             })
             .then((data) => {
                 if (data==0) {
-                    res.send("El registro del empleado no existe");
+                    mensaje("El registro del empleado no existe", 500, [], res);
                 } else {
                     console.log(data);
-                    res.send("Registro eliminado con exito");
+                    mensaje("Registro eliminado con exito", 200, [], res);
                 }
             })   
             .catch((error) => {
                 console.log(error);
-                res.send("Error al eliminar los datos del cliente");
+                mensaje("Error al eliminar los datos del cliente", 500, [], res);
 
             });
     }
@@ -113,20 +114,20 @@ exports.eliminarEmpleados = async (req, res) => {
 
 //MODIFICAR REGISTRO EMPLEADOS
 exports.modificarEmpleados = async (req, res) => {
-    const { Email} = req.query;
-    const {Telefono, Sucursales_IdSucursal, Puestos_IdPuesto} = req.body;
-    if(!Telefono || !Sucursales_IdSucursal || !Puestos_IdPuesto){
-        res.send("Por favor envie los datos completos");
+    const { IdEmpleado} = req.query;
+    const {Telefono, Direccion, Estado, Sucursales_IdSucursal} = req.body;
+    if(!Telefono ||!Estado ||!Sucursales_IdSucursal ){
+        mensaje("Debe enviar los datos completos", 500, [], res);
     }
     else{
         var busquedaEmpleados = await ModeloEmpleados.findOne({
             where:{
 
-                Email:Email,  
+                IdEmpleado:IdEmpleado,  
             }
         });
         if(!busquedaEmpleados){
-            res.send("Lo sentimos...El empleado no existe");
+            mensaje("Lo sentimos mucho pero...No existe el empleado", 500, [], res);
         }
         else{
             const buscarsucursal = await ModeloSucursales.findOne({
@@ -135,21 +136,22 @@ exports.modificarEmpleados = async (req, res) => {
                 }
             });
             if (!buscarsucursal) {
-                res.send("La sucursal no existe");
+                mensaje("La sucursal no existe", 500, [], res);
             } else 
             {
             busquedaEmpleados.Telefono=Telefono;
+            busquedaEmpleados.Direccion=Direccion;
+            busquedaEmpleados.Estado=Estado;
             busquedaEmpleados.Sucursales_IdSucursal = Sucursales_IdSucursal;
-            busquedaEmpleados.Puestos_IdPuesto= Puestos_IdPuesto;
             await busquedaEmpleados.save()
             .then((data) => {
                 console.log(data);
-                res.send("Registro modificado");
+                mensaje("Registro de Empleado Modificado Exitosamente", 200, [], res);
                 
             })
             .catch((error) => {
                 console.log(error);
-                res.send("Error al querer modificar los datos");
+                mensaje("Error al modificar el registro de empleado", 500, [], res); 
 
             });
         }
