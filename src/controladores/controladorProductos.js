@@ -44,7 +44,7 @@ exports.inicio = (req,res) => {
  }
 
  exports.guardar = async (req,res) => {
-        const {NombreProducto, DescripcionProducto, ISV,Estado,Categorias_IdCategoria} = req.body;
+        const {NombreProducto, DescripcionProducto, ISV,Estado,Categorias_IdCategoria, Imagen} = req.body;
         if(!NombreProducto || !DescripcionProducto || !ISV || !Estado || !Categorias_IdCategoria)
         {
             res.send("Debe enviar los datos completos");
@@ -57,6 +57,7 @@ exports.inicio = (req,res) => {
                 ISV: ISV,
                 Estado: Estado,
                 Categorias_IdCategoria: Categorias_IdCategoria,
+                Imagen: Imagen,
             })
             .then((data) => 
             {
@@ -73,7 +74,7 @@ exports.inicio = (req,res) => {
 
  exports.modificarProductos = async (req,res) => {
     const {IdProducto} = req.query; 
-    const {NombreProducto, DescripcionProducto, ISV,Imagen,Estado,Categorias_IdCategoria} = req.body;
+    const {Estado} = req.body;
     if(!IdProducto)
     {
         res.send("Debe enviar el id del Producto");
@@ -93,12 +94,7 @@ exports.inicio = (req,res) => {
     else
     {
             //va a guardar los datos
-                buscarproducto.NombreProducto = NombreProducto;
-                buscarproducto.DescripcionProducto= DescripcionProducto;
-                buscarproducto.ISV= ISV;
-                buscarproducto.Imagen= Imagen;
                 buscarproducto.Estado= Estado;
-                buscarproducto.Categorias_IdCategoria= Categorias_IdCategoria;
                 await buscarproducto.save()
                 .then((data) => {
                 console.log(data);
