@@ -4,6 +4,7 @@ const { body, query } = require('express-validator');
 const router = Router();
 router.get('/', controladorSucursales.inicio);
 router.get('/listar/', controladorSucursales.listarSucursales);
+router.get('/listarFlat/', controladorSucursales.listarSucursal);
 router.post('/guardar/',
 body('NombreSucursal').isLength({min: 3}).withMessage('El nombre de la sucursal debe tener 3 o mas caracteres'),  
 controladorSucursales.guardarSucursales);
