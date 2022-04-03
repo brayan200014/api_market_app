@@ -65,6 +65,8 @@ exports.actualizarDetalleCompra = async (req, res)=>{
             }
         });
 
+        console.log(buscarDetalleCompra);
+
         if(!buscarDetalleCompra){
             mensaje("Ingrese los datos del registro a actualizar Correctamente", 200, [], res);
         }
@@ -73,7 +75,7 @@ exports.actualizarDetalleCompra = async (req, res)=>{
             buscarDetalleCompra.PrecioCompra = PrecioCompra;
             await buscarDetalleCompra.save()
             .then((data)=>{
-                mensaje("El detalle de Compra fue actualizado exitosamente", 200, [], res);
+                mensaje("El detalle de Compra fue actualizado exitosamente", 200, data, res);
             })
             .catch((error)=>{
                 mensaje("Error al actualizar el Detalle de Compra", 200, [], res);
@@ -81,6 +83,30 @@ exports.actualizarDetalleCompra = async (req, res)=>{
         }
     }
 
+};
+
+exports.listarDetalle = async(req, res)=>{
+    const validacion = validationResult(req);
+
+    if(!validacion.isEmpty()){
+        mensaje("Id sin formato valido", 200, validacion.array(), res);
+    }
+    else{
+        const { id } = req.query;
+
+        const buscarDetalle = await modeloDetalleCompra.findAll({
+            where: {
+                Compras_IdCompra: id
+            }
+        });
+
+        if(!buscarDetalle){
+            mensaje("Numero de factura incorrecto", 200, [], res);
+        }
+        else {
+            mensaje("Datos Detalle", 200, buscarDetalle, res);
+        }
+    }
 };
 
 /*

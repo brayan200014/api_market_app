@@ -6,6 +6,8 @@ const controladorDetalleCompra = require('../controladores/controladorDetalleCom
 
 router.get('/listar', controladorCompras.listarCompras);
 router.get('/listarCompra', controladorCompras.listarUnaCompra);
+router.get('/listarComprasJoin', controladorCompras.ListarComprasJoin);
+router.get('/listarDetalle',query('id').isInt().withMessage('El ID a buscar debe de ser entero') ,controladorDetalleCompra.listarDetalle);
 
 router.post('/guardar', body('FechaCompra').isDate().withMessage("El formato de fecha es invalido"),
 body('Subtotal').isFloat().withMessage("El valor debe ser un numero"),
@@ -21,7 +23,6 @@ body('Productos_IdProducto').isInt().withMessage("El ID del Producto debe de ser
 controladorDetalleCompra.guardarDetalleCompra);
 
 router.put('/modificar',query('IdCompra').isInt().withMessage("Debe Enviar un numero Entero"),
-body('FechaCompra').isDate().withMessage("El formato de fecha es invalido"),
 body('Subtotal').isFloat().withMessage("El valor debe ser un numero"),
 body('ISV').isFloat().withMessage("El valor debe ser un numero"),
 body('Empleados_IdEmpleado').isInt().withMessage("El ID del Empleado debe ser un entero"),
