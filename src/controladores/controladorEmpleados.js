@@ -56,7 +56,7 @@ exports.guardarEmpleados = async (req, res) => {
                         Telefono,
                         Direccion,
                         Email, 
-                        FechaContratacion, 
+                        FechaContratacion:Date.now(), 
                         Estado,
                         Sucursales_IdSucursal,
                         Puestos_IdPuesto, 
