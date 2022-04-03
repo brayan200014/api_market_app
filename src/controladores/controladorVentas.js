@@ -5,6 +5,9 @@ const modeloDetalleVenta= require('../modelos/modeloDetalleVenta');
 //const modeloProducto= require('')
 const controladorDetalleVenta= require('../controladores/controladorDetalleVenta');
 //var Venta_IdVenta=0;
+const sequelize= require('sequelize');
+const { QueryTypes }= require('@sequelize/core')
+const db= require('../configuraciones/db');
 
 const modeloUsuarioCliente= require('../modelos/modeloClientes'); 
 const modeloSucursal= require('../modelos/modeloSucursales');
@@ -20,6 +23,17 @@ exports.listar= async (req,res) => {
         msj("Datos Ventas", 200, listarVentas, res); 
     }
 }
+
+exports.listarJoinVentas= async (req,res)=> {
+    const ventas= await db.query('SELECT * FROM ListaVentasJoin;', { type: QueryTypes.SELECT});
+    
+    if(!ventas) {
+        msj("No hay ventas en los registros",200,[], res);
+    }
+    else {
+        msj("Datos Ventas", 200, ventas, res); 
+    }
+} 
 
 exports.listarVenta= async (req,res) => {
     const validacion= validationResult(req); 
@@ -127,9 +141,9 @@ exports.modificar= async (req,res)=>{
     }
     else {
         const {id}= req.query;
-        const {FechaVenta, Subtotal, ISV, IdUsuarioCliente,IdSucursal}= req.body;
+        const {Subtotal, ISV, IdUsuarioCliente,IdSucursal}= req.body;
 
-        if(!FechaVenta || !Subtotal || !ISV || !IdUsuarioCliente || !IdSucursal) {
+        if( !Subtotal || !ISV || !IdUsuarioCliente || !IdSucursal) {
             msj("Hay datos vacios al enviar los datos", 200, [], res); 
         }
         else 
@@ -171,7 +185,7 @@ exports.modificar= async (req,res)=>{
             }
             else 
             {
-                buscarVenta.FechaVenta= FechaVenta; 
+                buscarVenta.FechaVenta= buscarVenta.FechaVenta; 
                 buscarVenta.Subtotal= Subtotal; 
                 buscarVenta.ISV= ISV;
                 buscarVenta.IdUsuarioCliente= buscarIdCliente.IdUsuarioCliente; 
