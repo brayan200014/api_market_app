@@ -74,7 +74,7 @@ exports.inicio = (req,res) => {
 
  exports.modificarProductos = async (req,res) => {
     const {IdProducto} = req.query; 
-    const {Estado} = req.body;
+    const {Estado,NombreProducto,DescripcionProducto,Categorias_IdCategoria} = req.body;
     if(!IdProducto)
     {
         res.send("Debe enviar el id del Producto");
@@ -95,6 +95,9 @@ exports.inicio = (req,res) => {
     {
             //va a guardar los datos
                 buscarproducto.Estado= Estado;
+                buscarproducto.Categorias_IdCategoria= Categorias_IdCategoria;
+                buscarproducto.NombreProducto= NombreProducto;
+                buscarproducto.DescripcionProducto= DescripcionProducto;
                 await buscarproducto.save()
                 .then((data) => {
                 console.log(data);
