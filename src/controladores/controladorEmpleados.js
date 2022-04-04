@@ -24,6 +24,17 @@ exports.listarEmpleados = async (req, res) => {
     }
 };
 
+//LISTAR CON MENSAJE
+exports.listaEmpleado = async (req, res) => {
+    const listaEmpleado = await db.query("select * from vistaempleados",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
+    if(listaEmpleado.length==0){
+        res.send("No existen datos!!!");
+
+    }
+    else{
+        res.json(listaEmpleado);
+    }
+};
 
 //GUARDAR REGISTROS EMPLEADOS Y VALIDACIÓN
 exports.guardarEmpleados = async (req, res) => {

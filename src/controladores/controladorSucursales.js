@@ -124,7 +124,7 @@ exports.modificarSucursales = async (req, res) => {
     const { IdSucursal} = req.query;
     const {NombreSucursal, Direccion ,Ciudades_IdCiudad} = req.body;
     if(!NombreSucursal || !Ciudades_IdCiudad){
-        res.send("Por favor envie los datos completos");
+        mensaje("Debe enviar los datos completos", 500, [], res);
     }
     else{
         var busquedaSucursal = await ModeloSucursales.findOne({
@@ -134,7 +134,7 @@ exports.modificarSucursales = async (req, res) => {
             }
         });
         if(!busquedaSucursal){
-            res.send("Lo sentimos...La sucursal no existe");
+            mensaje("Lo sentimos mucho pero...No existe la Sucursal", 500, [], res);
         }
         else{
             const buscarCiudad = await ModeloCiudad.findOne({
@@ -143,7 +143,7 @@ exports.modificarSucursales = async (req, res) => {
                 }
             });
             if (!buscarCiudad) {
-                res.send("La ciudad no existe");
+                mensaje("La ciudad no existe", 500, [], res);
             } else 
             {
             busquedaSucursal.NombreSucursal=NombreSucursal;
@@ -153,12 +153,12 @@ exports.modificarSucursales = async (req, res) => {
             await busquedaSucursal.save()
             .then((data) => {
                 console.log(data);
-                res.send("Registro modificado");
+                mensaje("Registro Modificado Exitosamente", 200, [], res);
                 
             })
             .catch((error) => {
                 console.log(error);
-                res.send("Error al querer modificar los datos");
+                mensaje("Error al modificar el registro", 500, [], res); 
 
             });
         }
