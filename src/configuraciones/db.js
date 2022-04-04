@@ -1,10 +1,11 @@
 const sequelize= require('sequelize');
+const sequelize= require('sequelize');
 const db= new sequelize (
-    'basemovil',
-    'root',
-    'Semeolvido14',
+    'BaseMovil',
+    'proyectoportales2',
+    'proyectoportales2',
     {
-        host: 'localhost',
+        host: 'ec2-34-224-30-50.compute-1.amazonaws.com',
         dialect: 'mysql',
         port: '3306'
     }
