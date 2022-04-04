@@ -81,11 +81,11 @@ exports.eliminarCiudad = async (req, res) => {
 
 //MODIFICAR REGISTRO CIUDADES
 exports.modificarCiudades = async (req, res) => {
-    console.log(req.query);
     console.log(req.body);
-    const { IdCiudad } = req.query;
+    console.log(req.body);
+    const { IdCiudad } = req.body;
     const {NombreCiudad} = req.body;
-    if(!NombreCiudad){
+    if(!IdCiudad){
         res.send("Por favor envie los datos completos");
     }
     else{
@@ -96,7 +96,7 @@ exports.modificarCiudades = async (req, res) => {
             }
         });
         if(!busquedaCiudad){
-            res.send("Lo siento...El id de la ciudad no existe");
+            res.send("Lo siento...la ciudad no existe");
         }
         else{
             busquedaCiudad.NombreCiudad=NombreCiudad;
@@ -114,5 +114,3 @@ exports.modificarCiudades = async (req, res) => {
         }
     }
 };
-
-

@@ -23,6 +23,17 @@ exports.listar = async (req,res) => {
 };
 
 
+exports.listarCategorias = async (req,res) => {
+    const listar = await db.query("Select * from vistacategorias",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
+    if(listar.length==0){
+        res.send("Lo sentimos mucho pero...No existen datos");
+    }
+    else{
+        res.json(listar);
+    }
+};
+
+
 //guardar Categorias
 exports.guardarCategorias= async (req, res) => {
     const validacion = validationResult(req);
@@ -86,7 +97,7 @@ exports.eliminarCategoria = async (req, res) => {
 exports.modificarCategorias = async (req, res) => {
     console.log(req.query);
     console.log(req.body);
-    const { IdCategoria} = req.query;
+    const { IdCategoria} = req.body;
     const {NombreCategoria} = req.body;
     if(!NombreCategoria){
         res.send("Por favor envie los datos completos");
