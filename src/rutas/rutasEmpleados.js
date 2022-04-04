@@ -5,6 +5,7 @@ const { body, query } = require('express-validator');
 const router = Router();
 router.get('/', controladorEmpleados.inicio);
 router.get('/listar/', controladorEmpleados.listarEmpleados);
+router.get('/listarCombo/', controladorEmpleados.listaEmpleado);
 router.post('/guardar/',
 body('Nombre').isLength({min: 3}).withMessage('El nombre del empleado debe tener 3 o mas caracteres'),  
 body('Apellido').isLength({min: 5}).withMessage('El apellido del empleado debe tener 5 o mas caracteres'), 
