@@ -4,6 +4,28 @@ const internal= require('stream');
 const msj=require('../componentes/mensaje');
 const modeloProducto= require('../modelos/modeloProductos');
 const modeloVentas= require('../modelos/modeloVentas');
+const sequelize= require('sequelize');
+const { QueryTypes }= require('@sequelize/core')
+const db= require('../configuraciones/db');
+
+
+exports.consultarUltimoIdProductoImagen = async (req,res) => {
+    const IdProducto= await db.query('SELECT max(IdProducto) as IdProducto  from productos;  ', { type: QueryTypes.SELECT});
+    let buscarIdProducto= await modeloProducto.findOne({
+      where: {
+          IdProducto: IdProducto[0].IdProducto
+      }
+  }); 
+  console.log(buscarIdProducto.IdProducto); 
+
+  if(!buscarIdProducto) {
+      msj('No existe el id producto', 404, [], res);
+  }
+  else 
+  {
+      msj('Id Solicitado', 200,IdProducto[0].IdProducto, res); 
+  }
+}
 
 exports.RecibirImagenProducto= async (req,res) => {
     const {filename}= req.file;

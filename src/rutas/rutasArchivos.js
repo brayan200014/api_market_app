@@ -17,10 +17,11 @@ const upload= multer({
 });
 
 const router= Router();
-router.get('/',upload.single('img'), controladorArchivos.RecibirImagenProducto);
+router.post('/',upload.single('img'), controladorArchivos.RecibirImagenProducto);
 router.get('/recibirImagen',upload.single('img'), controladorArchivos.recibirImagen);
 router.get('/consultar',controladorArchivos.consultarImagenProducto);
 router.get('/consultarPublic',controladorArchivos.consultarImagenPublic);
+router.get('/ultimoId', controladorArchivos.consultarUltimoIdProductoImagen); 
 
 
 
