@@ -6,6 +6,9 @@ const modeloEmpleado = require('../modelos/modeloEmpleados');
 const modeloSucursal= require('../modelos/modeloSucursales');
 const modeloProveedor = require('../modelos/modeloProveedores');
 
+const { QueryTypes }= require('@sequelize/core')
+const db = require('../configuraciones/db');
+
 exports.listarCompras = async(req, res)=>{
     const listarCompras = await modeloCompra.findAll();
     if(listarCompras.length == 0){
@@ -13,6 +16,16 @@ exports.listarCompras = async(req, res)=>{
     }
     else{
         mensaje("Lista Compras", 200, listarCompras, res);
+    }
+};
+exports.ListarComprasJoin = async (req,res)=> {
+    const compras = await db.query('SELECT * FROM ListaComprasJoin;', { type: QueryTypes.SELECT});
+    
+    if(!compras){
+        mensaje("No hay Compras en los registros",200,[], res);
+    }
+    else{
+        mensaje("Datos Compras", 200, compras, res); 
     }
 };
 exports.guardarCompra = async (req, res)=>{
@@ -69,13 +82,10 @@ exports.modificarCompra= async (req, res)=>{
     }
     else{
         const { IdCompra } = req.query;
-        const {FechaCompra, Subtotal, ISV, Empleados_IdEmpleado, Sucursales_IdSucursal, Proveedores_IdProveedor} = req.body;
+        const {Subtotal, ISV, Empleados_IdEmpleado, Sucursales_IdSucursal, Proveedores_IdProveedor} = req.body;
 
         if(!IdCompra){
             mensaje("Debe de ingresar un numero de Compra VALIDO.");
-        }
-        else if(!FechaCompra){
-            mensaje("No debe dejar la fecha vacia.", 200, [], res);
         }
         else if(!Subtotal){
             mensaje("No debe dejar el subtotal vacio.", 200, [], res);
@@ -122,7 +132,7 @@ exports.modificarCompra= async (req, res)=>{
                 mensaje("El Id del Proveedor NO existe.", 200, [], res);
             }
             else{
-                buscarCompra.FechaCompra = FechaCompra;
+                buscarCompra.FechaCompra = buscarCompra.FechaCompra;
                 buscarCompra.Subtotal = Subtotal;
                 buscarCompra.ISV = ISV;
                 buscarCompra.Empleados_IdEmpleado = buscarIdEmpleado.IdEmpleado;
