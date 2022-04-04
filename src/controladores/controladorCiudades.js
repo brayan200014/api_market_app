@@ -3,6 +3,7 @@ const ModeloCiudad = require('../modelos/modeloCiudades');
 const db = require('../configuraciones/db');
 const {QueryTypes} = require('sequelize');
 const {validationResult} = require('express-validator');
+const mensaje = require('../componentes/mensaje');
 
 exports.inicio = (req, res) =>{
     res.send("Usted se encuentra en Modulo Ciudades...Bienvenido");
@@ -13,12 +14,30 @@ exports.listarCiudades = async (req, res) => {
     const listarCiudades = await db.query("Select * from vistaciudades",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
     if(listarCiudades.length==0){
         res.send("Lo sentimos mucho pero...No existen datos");
+        //mensaje("Lo sentimos mucho pero...No existen datos", 200, [], res);
 
     }
     else{
         res.json(listarCiudades);
+        //mensaje("Datos Empleados", 200, listarCiudades, res);
     }
 };
+
+//LISTAR REGISTRO CIUDADES
+exports.listarCiudad = async (req, res) => {
+    const listarCiudad = await db.query("Select * from vistaciudades",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
+    if(listarCiudad.length==0){
+        //res.send("Lo sentimos mucho pero...No existen datos");
+        mensaje("Lo sentimos mucho pero...No existen datos", 200, [], res);
+
+    }
+    else{
+        //res.json(listarCiudad);
+        mensaje("Datos Empleados", 200, listarCiudad, res);
+    }
+};
+
+
 
 //GUARDAR CIUDADES
 exports.guardarCiudades = async (req, res) => {

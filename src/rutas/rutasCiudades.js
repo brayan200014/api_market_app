@@ -4,6 +4,7 @@ const { body, query } = require('express-validator');
 const router = Router();
 router.get('/', controladorCiudades.inicio);
 router.get('/listar/', controladorCiudades.listarCiudades);
+router.get('/listarFlat/', controladorCiudades.listarCiudad);
 router.post('/guardar/', 
 body('NombreCiudad').isLength({min: 4}).withMessage('El nombre de la ciudad debe tener 3 o mas caracteres'),  
 controladorCiudades.guardarCiudades);

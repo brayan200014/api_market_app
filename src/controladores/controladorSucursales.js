@@ -4,6 +4,7 @@ const ModeloCiudad = require('../modelos/modeloCiudades');
 const db = require('../configuraciones/db');
 const {QueryTypes} = require('sequelize');
 const {validationResult} = require('express-validator');
+const mensaje = require('../componentes/mensaje');
 
 exports.inicio = (req, res) =>{
     res.send("Usted se encuentra en Modulo Sucursales...Bienvenido");
@@ -11,13 +12,28 @@ exports.inicio = (req, res) =>{
 
 //LISTAR REGISTRO SUCURSALES
 exports.listarSucursales = async (req, res) => {
-    const listarSucursales = await db.query("select * from vistasucursales",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
+    const listarSucursales = await db.query("Select * from VistaSucursales",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
     if(listarSucursales.length==0){
         res.send("Lo sentimos mucho pero...No existen datos");
+        //mensaje("Lo sentimos mucho pero...No existen datos", 500, [], res);
 
     }
     else{
         res.json(listarSucursales);
+        //mensaje("Datos Sucursales", 200,listarSucursales, res);
+    }
+};
+
+exports.listarSucursal = async (req, res) => {
+    const listarSucursal = await db.query("Select * from VistaSucursales",{type:QueryTypes.SELECT}); //Aqui estoy llamando a la vista...consulta lit
+    if(listarSucursal.length==0){
+        //res.send("Lo sentimos mucho pero...No existen datos");
+        mensaje("Lo sentimos mucho pero...No existen datos", 500, [], res);
+
+    }
+    else{
+        //res.json(listarSucursales);
+        mensaje("Datos Sucursales", 200,listarSucursal, res);
     }
 };
 
@@ -108,7 +124,7 @@ exports.modificarSucursales = async (req, res) => {
     const { IdSucursal} = req.query;
     const {NombreSucursal, Direccion ,Ciudades_IdCiudad} = req.body;
     if(!NombreSucursal || !Ciudades_IdCiudad){
-        res.send("Por favor envie los datos completos");
+        mensaje("Debe enviar los datos completos", 500, [], res);
     }
     else{
         var busquedaSucursal = await ModeloSucursales.findOne({
@@ -118,7 +134,7 @@ exports.modificarSucursales = async (req, res) => {
             }
         });
         if(!busquedaSucursal){
-            res.send("Lo sentimos...La sucursal no existe");
+            mensaje("Lo sentimos mucho pero...No existe la Sucursal", 500, [], res);
         }
         else{
             const buscarCiudad = await ModeloCiudad.findOne({
@@ -127,7 +143,7 @@ exports.modificarSucursales = async (req, res) => {
                 }
             });
             if (!buscarCiudad) {
-                res.send("La ciudad no existe");
+                mensaje("La ciudad no existe", 500, [], res);
             } else 
             {
             busquedaSucursal.NombreSucursal=NombreSucursal;
@@ -137,12 +153,12 @@ exports.modificarSucursales = async (req, res) => {
             await busquedaSucursal.save()
             .then((data) => {
                 console.log(data);
-                res.send("Registro modificado");
+                mensaje("Registro Modificado Exitosamente", 200, [], res);
                 
             })
             .catch((error) => {
                 console.log(error);
-                res.send("Error al querer modificar los datos");
+                mensaje("Error al modificar el registro", 500, [], res); 
 
             });
         }
